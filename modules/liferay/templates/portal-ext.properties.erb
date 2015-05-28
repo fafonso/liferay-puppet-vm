@@ -1,0 +1,34 @@
+#
+# MySQL
+#
+jdbc.default.jndi.name=
+jdbc.default.driverClassName=com.mysql.jdbc.Driver
+jdbc.default.url=jdbc:mysql://localhost/<%=@db_name%>?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false
+jdbc.default.username=<%=@db_user%>
+jdbc.default.password=<%=@db_password%>
+
+#this turns off an annoying message. You want this line.
+plugin.notifications.enabled=false
+
+#this is pretty self explanatory if you know what captcha is
+captcha.max.challenges=0
+
+browser.launcher.url=
+
+#reindexes stuff when you startup Liferay
+index.on.startup=true
+
+mail.session.jndi.name=
+
+axis.servlet.hosts.allowed=
+
+tunnel.servlet.hosts.allowed=
+
+#Telling Liferay that it is working behind Apache HTTPd
+#web.server.http.port=80
+#web.server.https.port=443
+
+#this sets your home directory, which locally stores your data and deploy folders
+liferay.home=<%=@liferay_home%>
+
+auto.deploy.deploy.dir=<%=@liferay_deploy_dir%>
