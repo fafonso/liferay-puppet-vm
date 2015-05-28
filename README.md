@@ -85,6 +85,6 @@ Disclaimer: This setup is not prepared/tuned for production environments and its
 
 ### Contribution guidelines ###
 
-Contributions and improvements are welcomed. Fell free to email me and/or send Pull Requests. 
+Contributions and improvements are welcomed. Fell free to send Pull Requests. 
 
-Filipe Afonso (filipenuno@gmail.com)
+Filipe Afonso
