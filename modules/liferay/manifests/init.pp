@@ -50,12 +50,16 @@ class liferay(
     ensure => present
   }
 
+  file {"${zip_file_location}":
+    ensure => "directory",
+  }
+
   exec {"get-liferay":
     command => "wget ${webapp_url} -O ${zip_file_location}/${liferay_zip_filename}",
     cwd     => "/home/vagrant",
     path    => ["/usr/bin", "/bin"],
-    require => Package["wget"],
-    timeout => 600,
+    require => [Package["wget"], File["${zip_file_location}"]],
+    timeout => 1200,
     creates => "${zip_file_location}/${liferay_zip_filename}"
   }
 
