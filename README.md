@@ -9,6 +9,7 @@ Disclaimer: This setup is not prepared/tuned for production environments and its
 #### Prerequisites ####
 
 * Vagrant installed
+* [VirtualBox](https://www.virtualbox.org/)
 * [Ubuntu trusty64](https://atlas.hashicorp.com/ubuntu/boxes/trusty64)
 
 #### Default usage (Liferay 6.2 CE GA4) ####
