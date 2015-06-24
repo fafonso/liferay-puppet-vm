@@ -11,129 +11,60 @@ class liferay(
   $permsize             = "512",
   $install_path,
   $liferay_user,
+  $liferay_cluster      = false,
   ) {
-
-  $group             = "www"
-  $liferay_path      = "${install_path}/${liferay_folder}"
-  $liferay_home      = $liferay_path
-  $tomcat_path       = "${liferay_path}/${tomcat_folder}"
-
-  $webapp_url        = "http://downloads.sourceforge.net/project/lportal/Liferay%20Portal/${version}/${liferay_zip_filename}"
 
   $zip_file_location = "/etc/puppet/modules/liferay/files"
 
-  exec {"stop-liferay":
-    command => "${tomcat_path}/bin/catalina.sh stop",
-    onlyif => "test -f ${tomcat_path}/bin/catalina.sh",
-    path => ["/usr/bin", "/bin"],
-  }
-
-  exec {"clean-liferay-home":
-    command => "rm -fR ${liferay_home}/*",
-    path => ["/usr/bin", "/bin"],
-    require => Exec["stop-liferay"]
-  }
-
-  exec {"clean-liferay-deploy-dir":
-    command => "rm -fR ${liferay_deploy_dir}/*",
-    path => ["/usr/bin", "/bin"],
-    require => Exec["clean-liferay-home"]
-  }
-
-  exec {"clean-liferay":
-    command => "rm -fR ${install_path}/*",
-    path => ["/usr/bin", "/bin"],
-    require => Exec["clean-liferay-deploy-dir"]
-  }
-
-  package {"wget":
-    ensure => present
-  }
-
-  file {"${zip_file_location}":
-    ensure => "directory",
-  }
-
-  exec {"get-liferay":
-    command => "wget ${webapp_url} -O ${zip_file_location}/${liferay_zip_filename}",
-    cwd     => "/home/vagrant",
-    path    => ["/usr/bin", "/bin"],
-    require => [Package["wget"], File["${zip_file_location}"]],
-    timeout => 1200,
-    creates => "${zip_file_location}/${liferay_zip_filename}"
-  }
-
+  #Prepararation tasks
   package {"unzip":
-    ensure => present
+    name   => "unzip",
+    ensure => present,
+  }
+  
+  class { 'liferay::get' :
+  	version              => $version,
+  	liferay_zip_filename => $liferay_zip_filename,
+  	zip_file_location    => $zip_file_location,
   }
 
-  file {"${install_path}":
-    ensure => "directory",
-    owner  => $liferay_user,
-    group  => $group,
-    mode   => 775,
-  }
+  if($liferay_cluster) {
+    #Setup Liferay cluster with 2 nodes
+    
+    class { 'liferay::cluster' :
+      db_user              => $db_user,
+      db_password          => $db_password,
+      db_name              => $db_name,
+      install_path         => $install_path, 
+      liferay_user         => $liferay_user,
+      liferay_folder       => $liferay_folder, 
+      tomcat_folder        => $tomcat_folder, 
+      liferay_zip_filename => $liferay_zip_filename,
+      zip_file_location    => $zip_file_location,
+      liferay_deploy_dir   => $liferay_deploy_dir,
+      xmx                  => $xmx,
+      permsize             => $permsize,
+      require              => [Class["liferay::get"], Package["unzip"]],
+    }
 
-  exec {"unzip-liferay":
-    command => "unzip ${zip_file_location}/${liferay_zip_filename}",
-    cwd => "${install_path}",
-    require => [Exec["get-liferay"], Package["unzip"], File["${install_path}"], Exec["clean-liferay"]],
-    path => ["/usr/bin", "/bin"],
-  }
+  } else {
+    #Setup Liferay single node
+    liferay::single { 'single' :
+      db_user              => $db_user,
+      db_password          => $db_password,
+      db_name              => $db_name,
+      install_path         => $install_path, 
+      liferay_user         => $liferay_user,
+      liferay_folder       => $liferay_folder, 
+      tomcat_folder        => $tomcat_folder, 
+      liferay_zip_filename => $liferay_zip_filename,
+      zip_file_location    => $zip_file_location,
+      liferay_deploy_dir   => $liferay_deploy_dir,
+      xmx                  => $xmx,
+      permsize             => $permsize,
+      require              => [Class["liferay::get"], Package["unzip"]],
+    }
 
-  file { "$liferay_home":
-    ensure     => "directory",
-    owner      => $liferay_user,
-    group      => $group,
-    recurse    => "true",
-    mode       => 2775,
-    require    => Exec["unzip-liferay"],
-  }
-
-  file { "$liferay_home/deploy":
-    ensure     => "link",
-    owner      => $liferay_user,
-    group      => $group,
-    mode       => 2775,
-    target     => $liferay_deploy_dir,
-    require    => File["$liferay_home"],
-  }
-
-  exec {"remove-liferay-zip":
-    command => "rm ${zip_file_location}/${liferay_zip_filename}",
-    cwd => "${install_path}",
-    require => Exec["unzip-liferay"],
-    path => ["/usr/bin", "/bin"],
-  }
-
-  file {"portal-ext.properties":
-    path => "${tomcat_path}/webapps/ROOT/WEB-INF/classes/portal-ext.properties",
-    content => template('liferay/portal-ext.properties.erb'),
-    require => Exec["unzip-liferay"]
-  }
-
-  file {"setenv.sh":
-    path => "${tomcat_path}/bin/setenv.sh",
-    content => template('liferay/setenv.sh.erb'),
-    require => Exec["unzip-liferay"]
-  }
-
-  file { "tomcat":
-    name       => "/etc/init.d/tomcat",
-    ensure     => present,
-    content    => template("liferay/tomcat.erb"),
-    owner      => "root",
-    group      => "root",
-    mode       => 0755,
-  }
-
-  service { "tomcat":
-    ensure  => "running",
-    require => [
-        File["portal-ext.properties"],
-        File["setenv.sh"],
-        File["tomcat"]
-      ],
   }
 
   firewall { '101 allow access to tomcat and JMX':

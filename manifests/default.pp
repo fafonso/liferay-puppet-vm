@@ -15,9 +15,16 @@ $liferay_user         = "liferay"
 $install_path         = "/opt/liferay"
 
 #Install Liferay from local archive
-#$liferay_zip_filename = "liferay-portal-tomcat-6.2-ee-sp10-20150205153520442.zip"
+#$liferay_zip_filename = "liferay-portal-tomcat-6.2-ee-sp11-20150407182402908.zip"
 #Liferay folder name inside zip archive
-#$liferay_folder       = "liferay-portal-6.2-ee-sp10"
+#$liferay_folder       = "liferay-portal-6.2-ee-sp11"
+
+#Cluster configuration
+#$liferay_cluster      = true
+
+#Tomcat info (in a cluster configuration, each of the nodes will get this JVM memory parameters)
+#$xmx                  = "1024"
+#$permsize             = "256"
 
 #################################
 ##      Environment setup      ##
@@ -102,39 +109,32 @@ mysql::db { $db_name :
   collate  => 'utf8_general_ci',
 }
 
-if($liferay_zip_filename and $liferay_folder) {
-	#Setup Liferay from local module/files
-	class {'liferay' :
-	  db_user              => $db_user,
-	  db_password          => $db_password,
-	  db_name              => $db_name,
-	  install_path         => $install_path, 
-	  liferay_user         => $liferay_user,
-	  liferay_zip_filename => $liferay_zip_filename,
-	  liferay_folder       => $liferay_folder,
-	  require              => [
-	    Class['java'], 
-	    Class['::mysql::server']
-	  ]
-	}
-} else {
-	#Setup Liferay CE from web
-	class {'liferay' :
-	  db_user      => $db_user,
-	  db_password  => $db_password,
-	  db_name      => $db_name,
-	  install_path => $install_path, 
-	  liferay_user => $liferay_user,
-	  require      => [
-	    Class['java'], 
-	    Class['::mysql::server']
-	  ]
-	}
+#Setup Liferay
+class { 'liferay' :
+  db_user              => $db_user,
+  db_password          => $db_password,
+  db_name              => $db_name,
+  install_path         => $install_path, 
+  liferay_user         => $liferay_user,
+  liferay_cluster      => $liferay_cluster,
+  liferay_zip_filename => $liferay_zip_filename,
+  liferay_folder       => $liferay_folder,
+  xmx                  => $xmx,
+  permsize             => $permsize,
+  require              => [
+    Class['java'], 
+    Class['::mysql::server'],
+    Class['users'],
+  ]
 }
 
 #Setup Apache2
 class {'apache' :
-  require  => Class['apt'],
+  cluster  => $liferay_cluster,
+  require  => [
+  	Class['apt'], 
+  	Class['liferay'],
+  ],
 }
 
 #Setup firewall
@@ -150,7 +150,7 @@ Firewall {
 class { ['iptables::pre', 'iptables::post']: }
 
 class { 'firewall': 
-	require => Class['liferay'],
+	require => [Class['liferay'], Class['apache']],
 }
 
 

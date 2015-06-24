@@ -27,6 +27,7 @@ Vagrant.configure(2) do |config|
   #config.vm.network :forwarded_port, host: 13306, guest: 3306
   config.vm.network :forwarded_port, host: 18080, guest: 8080
   config.vm.network :forwarded_port, host: 18000, guest: 8000
+  config.vm.network :forwarded_port, host: 18081, guest: 8081
   config.vm.network :forwarded_port, host: 19090, guest: 9090
   config.vm.network :forwarded_port, host: 19091, guest: 9091
 
@@ -69,7 +70,8 @@ Vagrant.configure(2) do |config|
     #vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000 ]
   
      # Customize the amount of memory on the VM:
-     vb.memory = "3072"
+     # vb.memory = "3072"
+     vb.memory = "4096"
      vb.cpus = 2
      vb.name = "vagrant.liferay.com"
   end

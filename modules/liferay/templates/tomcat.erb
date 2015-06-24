@@ -19,7 +19,7 @@ TOMCAT_HOME=<%=@tomcat_path%>
 SHUTDOWN_WAIT=20
 
 tomcat_pid() {
-	echo `ps aux | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $2 }'`
+	echo `ps aux | grep org.apache.catalina.startup.Bootstrap | grep <%=@install_path%> | grep -v grep | awk '{ print $2 }'`
 }
 
 start() {

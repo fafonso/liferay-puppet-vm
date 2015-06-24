@@ -35,3 +35,17 @@ auto.deploy.deploy.dir=<%=@liferay_deploy_dir%>
 
 #reindexes stuff when you startup Liferay
 index.on.startup=true
+
+#Cluster configurations
+cluster.link.enabled=true
+
+#Cluster DL
+dl.store.file.system.root.dir=<%=@data_dl_path%>
+dl.store.impl=com.liferay.portlet.documentlibrary.store.AdvancedFileSystemStore
+
+#Search
+lucene.replicate.write=true
+
+#Turn off the wizard
+setup.wizard.enabled=false
+

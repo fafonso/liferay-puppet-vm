@@ -1,0 +1,25 @@
+
+<Proxy *>
+	AddDefaultCharSet Off
+	Order deny,allow
+	Allow from all
+</Proxy>
+
+ProxyPass /balancer-manager !
+ProxyPass / balancer://ajpCluster/ stickysession=JSESSIONID
+ProxyPassReverse / balancer://ajpCluster/ stickysession=JSESSIONID
+
+<Proxy balancer://ajpCluster>
+
+	<% scope.lookupvar('liferay::cluster::ajp_nodes').each do |val| -%>
+		<%= val %>
+	<% end -%>
+
+	ProxySet lbmethod=byrequests
+</Proxy>
+
+<Location /balancer-manager>
+	SetHandler balancer-manager
+	Order deny,allow
+	Allow from all
+</Location>
