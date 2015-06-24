@@ -89,7 +89,7 @@ Example: sudo service tomcat8081 start
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy/nodeX for deployments
 * Configures tomcat and tomcat8081 as unix service
 * Set /opt/liferay/data/document_library as document library for both nodes, using Liferay AdvancedFileSystemStore
-* Node1 uses 8080 port for http and 8081 for node2
+* Http ports configured are 8080 for node1 and 8081 for node2
 
 #### Apache2 #####
 
@@ -101,7 +101,7 @@ Example: sudo service tomcat8081 start
 
 * Configured with http proxy from port 80 to 8080/8081
 * Sticky sessions
-* Load balancing configured by request
+* Load balancing configured with "by request" approach
 * Uses proxy, proxy_ajp, proxy_balancer, lbmethod_byrequest and slotmem_shm modules
 * Not configured to serve static content
 
