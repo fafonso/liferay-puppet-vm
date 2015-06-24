@@ -90,6 +90,7 @@ Example: sudo service tomcat8081 start
 * Configures tomcat and tomcat8081 as unix service
 * Set /opt/liferay/data/document_library as document library for both nodes, using Liferay AdvancedFileSystemStore
 * Http ports configured are 8080 for node1 and 8081 for node2
+* Uses the default Liferay cluster configuration (Multicast and RMI)
 
 #### Apache2 #####
 
