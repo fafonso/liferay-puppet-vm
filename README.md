@@ -61,15 +61,16 @@ Example: sudo service tomcat8081 start
 * [NTP Module](https://forge.puppetlabs.com/puppetlabs/ntp)
 * [Timezone Module](https://forge.puppetlabs.com/saz/timezone) (default to "Europe/Dublin")
 
-#### Java #####
+#### Java (OracleJDK or OpenJDK) #####
 
-* Version: Oracle 1.7
+* Version: Oracle 1.7 (default) or OpenJDK 7
 * [Java Module](https://forge.puppetlabs.com/puppetlabs/java)
 * Remote jmx configured on ports 9090 and 9091 with credential controlRole:liferay
 
-#### MySQL #####
+#### Database (MySQL or PostgreSQL) #####
 
-* [MySQL Module](https://forge.puppetlabs.com/puppetlabs/mysql)
+* [MySQL Module](https://forge.puppetlabs.com/puppetlabs/mysql) (Default)
+* [PostgreSQL Module](https://forge.puppetlabs.com/puppetlabs/postgresql)
 * liferay user
 * lportal database
 * Accessed only through localhost interface
@@ -79,6 +80,7 @@ Example: sudo service tomcat8081 start
 * Default usage will download Liferay 6.2 CE GA4 - bundled with tomcat
 * Configured to access lportal database
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy for deployments
+* <VAGRANT_SHARED_FOLDER>/liferay/portal-ext.properties available for configurations 
 * Configures tomcat as an unix service
 * Use default port 8080 for http
 
@@ -86,7 +88,8 @@ Example: sudo service tomcat8081 start
 
 * Default usage will download Liferay 6.2 CE GA4 - bundled with tomcat
 * Configured to access lportal database for both nodes
-* Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy/nodeX for deployments
+* Configured to use <VAGRANT_SHARED_FOLDER>/liferay/nodeX/deploy for deployments
+* <VAGRANT_SHARED_FOLDER>/liferay/nodeX/portal-ext.properties available for configurations 
 * Configures tomcat and tomcat8081 as unix service
 * Set /opt/liferay/data/document_library as document library for both nodes, using Liferay AdvancedFileSystemStore
 * Http ports configured are 8080 for node1 and 8081 for node2
@@ -108,6 +111,7 @@ Example: sudo service tomcat8081 start
 
 #### IPTables (VM Local ports) #####
 
+* Optional - Disabled by default
 * [Firewall Module](https://forge.puppetlabs.com/puppetlabs/firewall)
 * 22 ssh
 * 80, 443 apache

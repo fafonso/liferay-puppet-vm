@@ -1,6 +1,6 @@
 class users(
     $liferay_user,
-    $liferay_user_group = "www",
+    $liferay_group,
     $liferay_user_home,
   ) {
   
@@ -8,7 +8,7 @@ class users(
   user { "$liferay_user":
     ensure     => present,
     home       => $liferay_user_home,
-    groups     => $liferay_user_group,
+    groups     => $liferay_group,
     uid        => "510",
     require    => Class["groups"]
   }

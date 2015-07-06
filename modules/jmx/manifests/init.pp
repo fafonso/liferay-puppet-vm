@@ -1,9 +1,11 @@
-class jmx {
+class jmx (
+  $jre_management_path,
+  ) {
 
   #remote jmx configured with credential controlRole:liferay
 
-  file { "/usr/lib/jvm/java-7-oracle/jre/lib/management/jmxremote.access":
-    name   => "/usr/lib/jvm/java-7-oracle/jre/lib/management/jmxremote.access",
+  file { "${jre_management_path}/jmxremote.access":
+    name   => "${jre_management_path}/jmxremote.access",
     ensure => present,
     source => "puppet:///modules/jmx/jmxremote.access",
     owner  => "root",
@@ -11,8 +13,8 @@ class jmx {
     mode   => 0644
   }
 
-  file { "/usr/lib/jvm/java-7-oracle/jre/lib/management/jmxremote.password":
-    name   => "/usr/lib/jvm/java-7-oracle/jre/lib/management/jmxremote.password",
+  file { "${jre_management_path}/jmxremote.password":
+    name   => "${jre_management_path}/jmxremote.password",
     ensure => present,
     source => "puppet:///modules/jmx/jmxremote.password",
     owner  => "root",
@@ -20,3 +22,4 @@ class jmx {
     mode   => 0644
   }
 }
+

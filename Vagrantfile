@@ -23,15 +23,15 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network :forwarded_port, host: 1080, guest: 80
-  #config.vm.network :forwarded_port, host: 13306, guest: 3306
+  config.vm.network :forwarded_port, host: 1080,  guest: 80
   config.vm.network :forwarded_port, host: 18080, guest: 8080
   config.vm.network :forwarded_port, host: 18000, guest: 8000
   config.vm.network :forwarded_port, host: 18081, guest: 8081
   config.vm.network :forwarded_port, host: 19090, guest: 9090
   config.vm.network :forwarded_port, host: 19091, guest: 9091
-
-
+  #config.vm.network :forwarded_port, host: 15432, guest: 5432
+  #config.vm.network :forwarded_port, host: 13306, guest: 3306
+  
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
@@ -95,9 +95,10 @@ Vagrant.configure(2) do |config|
   shell.inline = "mkdir -p /etc/puppet/modules;
                   cp -r /vagrant/modules/* /etc/puppet/modules;
                   puppet module install puppetlabs-stdlib;
+                  puppet module install puppetlabs-apt;
                   puppet module install puppetlabs-mysql;
                   puppet module install puppetlabs-java;
-                  puppet module install puppetlabs-apt;
+                  puppet module install puppetlabs-postgresql;
                   puppet module install saz-timezone;
                   puppet module install puppetlabs-ntp;
                   puppet module install puppetlabs-firewall"

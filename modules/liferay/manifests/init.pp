@@ -3,7 +3,7 @@ class liferay(
   $tomcat_folder        = "tomcat-7.0.42", 
   $version              = "6.2.3%20GA4",
   $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga4-20150416163831865.zip",
-  $liferay_deploy_dir   = "/vagrant/liferay/deploy",
+  $liferay_vagrant_dir   = "/vagrant/liferay",
   $db_user,
   $db_password,
   $db_name,
@@ -11,7 +11,9 @@ class liferay(
   $permsize             = "512",
   $install_path,
   $liferay_user,
+  $liferay_group,
   $liferay_cluster      = false,
+  $liferay_db,
   ) {
 
   $zip_file_location = "/etc/puppet/modules/liferay/files"
@@ -37,13 +39,15 @@ class liferay(
       db_name              => $db_name,
       install_path         => $install_path, 
       liferay_user         => $liferay_user,
+      liferay_group        => $liferay_group,
       liferay_folder       => $liferay_folder, 
       tomcat_folder        => $tomcat_folder, 
       liferay_zip_filename => $liferay_zip_filename,
       zip_file_location    => $zip_file_location,
-      liferay_deploy_dir   => $liferay_deploy_dir,
+      liferay_vagrant_dir  => $liferay_vagrant_dir,
       xmx                  => $xmx,
       permsize             => $permsize,
+      liferay_db           => $liferay_db,
       require              => [Class["liferay::get"], Package["unzip"]],
     }
 
@@ -55,22 +59,19 @@ class liferay(
       db_name              => $db_name,
       install_path         => $install_path, 
       liferay_user         => $liferay_user,
+      liferay_group        => $liferay_group,
       liferay_folder       => $liferay_folder, 
       tomcat_folder        => $tomcat_folder, 
       liferay_zip_filename => $liferay_zip_filename,
       zip_file_location    => $zip_file_location,
-      liferay_deploy_dir   => $liferay_deploy_dir,
+      liferay_vagrant_dir  => $liferay_vagrant_dir,
       xmx                  => $xmx,
       permsize             => $permsize,
+      liferay_db           => $liferay_db,
       require              => [Class["liferay::get"], Package["unzip"]],
     }
 
   }
 
-  firewall { '101 allow access to tomcat and JMX':
-    port   => [8080, 8000, 9090, 9091],
-    proto  => tcp,
-    action => accept,
-  }
   
 }

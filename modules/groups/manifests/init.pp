@@ -1,8 +1,8 @@
 class groups(
-	$group = "www"
+	$liferay_group
   ) {
   
-  group { "$group":
+  group { "$liferay_group":
     ensure     => present,
     gid        => "510"
   }

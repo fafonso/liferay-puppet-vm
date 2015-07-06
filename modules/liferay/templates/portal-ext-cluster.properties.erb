@@ -1,9 +1,9 @@
 #
-# MySQL
+# DB Conf
 #
 jdbc.default.jndi.name=
-jdbc.default.driverClassName=com.mysql.jdbc.Driver
-jdbc.default.url=jdbc:mysql://localhost/<%=@db_name%>?useUnicode=true&characterEncoding=UTF-8&useFastDateParsing=false
+jdbc.default.driverClassName=<%=@driverClassName%>
+jdbc.default.url=<%=@db_url%>
 jdbc.default.username=<%=@db_user%>
 jdbc.default.password=<%=@db_password%>
 
@@ -32,9 +32,6 @@ tunnel.servlet.hosts.allowed=
 liferay.home=<%=@liferay_home%>
 
 auto.deploy.deploy.dir=<%=@liferay_deploy_dir%>
-
-#reindexes stuff when you startup Liferay
-index.on.startup=true
 
 #Cluster configurations
 cluster.link.enabled=true

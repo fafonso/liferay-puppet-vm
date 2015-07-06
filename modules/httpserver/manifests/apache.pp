@@ -1,6 +1,6 @@
-class apache (
+class httpserver::apache (
     $apache_home = "/etc/apache2/",
-    $cluster     = false,
+    $cluster,
   ) {
 
   package { "apache2":
@@ -50,7 +50,7 @@ class apache (
 
     file {"ajp.conf":
       path    => "${apache_home}/conf-available/ajp.conf",
-      content => template('apache/apache-cluster-conf.erb'),
+      content => template('httpserver/apache-cluster-conf.erb'),
       require => Exec["valid_apache_home"],
     }
 
@@ -72,7 +72,7 @@ class apache (
 
     file {"jkmount.conf":
       path => "${apache_home}/conf-available/jkmount.conf",
-      source => "puppet:///modules/apache/jkmount.conf",
+      source => "puppet:///modules/httpserver/jkmount.conf",
       require => Exec["valid_apache_home"],
     }
 
@@ -87,10 +87,6 @@ class apache (
 
   }
 
-  firewall { '100 allow http and https access':
-    port   => [80, 443],
-    proto  => tcp,
-    action => accept,
-  }
+
   
 }
