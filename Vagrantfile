@@ -27,6 +27,7 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, host: 18080, guest: 8080
   config.vm.network :forwarded_port, host: 18000, guest: 8000
   config.vm.network :forwarded_port, host: 18081, guest: 8081
+  config.vm.network :forwarded_port, host: 18180, guest: 8180
   config.vm.network :forwarded_port, host: 19090, guest: 9090
   config.vm.network :forwarded_port, host: 19091, guest: 9091
   #config.vm.network :forwarded_port, host: 15432, guest: 5432
@@ -101,15 +102,10 @@ Vagrant.configure(2) do |config|
                   puppet module install puppetlabs-postgresql;
                   puppet module install saz-timezone;
                   puppet module install puppetlabs-ntp;
-                  puppet module install puppetlabs-firewall"
+                  puppet module install puppetlabs-firewall;
+                  puppet module install puppetlabs-tomcat"
   end
 
-  #[Tomcat module]
-  #puppet module install puppetlabs-stdlib;
-  #puppet module install puppetlabs-tomcat
-
-  #[Apache]
-  #puppet module install puppetlabs-apache;
 
   config.vm.provision :puppet do |puppet|
 

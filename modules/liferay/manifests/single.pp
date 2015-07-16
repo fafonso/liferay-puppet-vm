@@ -2,7 +2,7 @@ define liferay::single(
   $liferay_folder, 
   $tomcat_folder, 
   $liferay_zip_filename,
-  $zip_file_location,
+  $module_files_location,
   $liferay_vagrant_dir,
   $db_user,
   $db_password,
@@ -19,6 +19,7 @@ define liferay::single(
   $cluster_conf         = false,
   $data_dl_path         = "",
   $liferay_db,
+  $solr_distribution,
   ) {
 
   $liferay_path      = "${install_path}/${liferay_folder}"
@@ -81,9 +82,9 @@ define liferay::single(
   }
 
   exec {"${title}-unzip-liferay":
-    command => "unzip ${zip_file_location}/${liferay_zip_filename}",
+    command => "unzip ${module_files_location}/${liferay_zip_filename}",
     cwd     => "${install_path}",
-    require => [File["${install_path}"], Exec["${title}-clean-liferay"]],
+    require => [Package["unzip"], File["${install_path}"], Exec["${title}-clean-liferay"], ],
     path    => ["/usr/bin", "/bin"],
     user    => $liferay_user,
     group   => $liferay_group,
@@ -98,7 +99,15 @@ define liferay::single(
     recurse => "true",
     mode    => 2775,
     require => Exec["${title}-unzip-liferay"],
-  }
+  } ->
+
+  file { "${title}-liferay-deploy-folder":
+    path    => $liferay_deploy_dir,
+    ensure  => "directory",
+    owner   => $liferay_user,
+    group   => $liferay_group,
+    mode    => 2775,
+  } ->
 
   file { "${title}-deploy":
     path    => "$liferay_home/deploy",
@@ -107,7 +116,6 @@ define liferay::single(
     group   => $liferay_group,
     mode    => 2775,
     target  => $liferay_deploy_dir,
-    require => File["${title}-liferay-home"],
   }
 
   if ($cluster_conf) {
@@ -159,6 +167,22 @@ define liferay::single(
     owner      => "root",
     group      => "root",
     mode       => 0755,
+  }
+
+  #If using SOLR, we just need to deploy the prepared war here
+  # which is expected to be in: /etc/puppet/modules/liferay/files/solr/XPTO.war
+  if ($solr_distribution) {
+
+    exec {"${title}-deploy-war-solr-liferay":
+      command => "cp solr/*.war ${liferay_deploy_dir}/",
+      cwd     => $module_files_location,
+      path    => ["/usr/bin", "/bin"],
+      require => [
+        Exec["war-solr-liferay"],
+        File["${title}-deploy"],
+      ]
+    }
+
   }
 
   if ($http_port == "8080") {

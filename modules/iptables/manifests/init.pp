@@ -1,5 +1,6 @@
 class iptables (
   $cluster,
+  $solr,
   ){
 
   resources { "firewall":
@@ -46,6 +47,14 @@ class iptables (
     port   => [9090, 9091],
     proto  => tcp,
     action => accept,
+  }
+
+  if ($solr) {
+    firewall { '105 allow access to solr':
+      port   => [8180],
+      proto  => tcp,
+      action => accept,
+    }
   }
 
   include firewall

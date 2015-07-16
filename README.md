@@ -109,6 +109,11 @@ Example: sudo service tomcat8081 start
 * Uses proxy, proxy_ajp, proxy_balancer, lbmethod_byrequest and slotmem_shm modules
 * Not configured to serve static content
 
+#### SOLR (Optional) #####
+
+* Supported versions: 3.5.0
+* Uses [Tomcat Module](https://forge.puppetlabs.com/puppetlabs/tomcat)
+
 #### IPTables (VM Local ports) #####
 
 * Optional - Disabled by default
@@ -119,6 +124,7 @@ Example: sudo service tomcat8081 start
 * 9090, 9091 jmx
 * 8081 tomcat2 (Cluster only)
 * 23301-23351 Multicast (Cluster only)
+* 8180 solr (Optional)
 
 #### VM Exposed Ports #####
 
@@ -128,6 +134,7 @@ Example: sudo service tomcat8081 start
 * host: 18000, guest: 8000
 * host: 19090, guest: 9090
 * host: 19091, guest: 9091
+* host: 18180, guest: 8180
 
 ### Contribution guidelines ###
 

@@ -15,8 +15,25 @@ class vmbuilder(
     $use_firewall         = false,
     $httpserver           = "apache2",
     $java_distribution    = "oracle",
+    $solr_distribution    = "",
   ) {
   
+  #Ensure that we have unzip and wget to use across all the modules
+  #Limitation to puppet3
+  package {"unzip":
+    name   => "unzip",
+    ensure => present,
+  }
+
+  package {"zip":
+    name   => "zip",
+    ensure => present,
+  }
+
+  package {"wget":
+    name   => "wget",
+    ensure => present,
+  }
 
   #Unix configurations
   include hosts
@@ -59,8 +76,19 @@ class vmbuilder(
     liferay_db  => $liferay_db,
   }
 
-  #Setup Liferay
+  #Install SOLR
+  if ($solr_distribution) {
+    $solr_http_port = "8180"
 
+    class { 'solr':
+      distribution  => $solr_distribution,
+      liferay_user  => $liferay_user,
+      liferay_group => $liferay_group,
+      http_port     => $solr_http_port,
+    }
+  }
+
+  #Setup Liferay
   class { 'liferay' :
     db_user              => $db_user,
     db_password          => $db_password,
@@ -74,6 +102,8 @@ class vmbuilder(
     xmx                  => $xmx,
     permsize             => $permsize,
     liferay_db           => $liferay_db,
+    solr_http_port       => $solr_http_port,
+    solr_distribution    => $solr_distribution,
     require              => [
       Class['java'], 
       Class['users'],
@@ -95,6 +125,7 @@ class vmbuilder(
   if ($use_firewall) {
     class {'iptables' :
       cluster => $liferay_cluster,
+      solr    => $solr_distribution,
     }
   }
 
