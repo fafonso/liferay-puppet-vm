@@ -16,6 +16,7 @@ class vmbuilder(
     $httpserver           = "apache2",
     $java_distribution    = "oracle",
     $solr_distribution    = "",
+    $mail_server          = "",
   ) {
   
   #Ensure that we have unzip and wget to use across all the modules
@@ -88,6 +89,18 @@ class vmbuilder(
     }
   }
 
+  #Install the mail server
+  if ($mail_server) {
+    $mail_server_port = "1025"
+    $mail_http_port   = "1080"
+
+    class { 'email':
+      mail_server      => $mail_server,
+      mail_server_port => $mail_server_port,
+      mail_http_port   => $mail_http_port,
+    }
+  }
+
   #Setup Liferay
   class { 'liferay' :
     db_user              => $db_user,
@@ -104,6 +117,7 @@ class vmbuilder(
     liferay_db           => $liferay_db,
     solr_http_port       => $solr_http_port,
     solr_distribution    => $solr_distribution,
+    mail_server_port     => $mail_server_port,
     require              => [
       Class['java'], 
       Class['users'],
@@ -124,8 +138,9 @@ class vmbuilder(
   #Setup firewall
   if ($use_firewall) {
     class {'iptables' :
-      cluster => $liferay_cluster,
-      solr    => $solr_distribution,
+      cluster     => $liferay_cluster,
+      solr        => $solr_distribution,
+      mail_server => $mail_server,
     }
   }
 

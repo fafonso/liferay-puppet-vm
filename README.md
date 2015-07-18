@@ -113,6 +113,12 @@ Example: sudo service tomcat8081 start
 
 * Supported versions: 3.5.0
 * Uses [Tomcat Module](https://forge.puppetlabs.com/puppetlabs/tomcat)
+* [Solr admin](http://localhost:18180/solr/admin)
+
+#### Email Server (Optional) #####
+
+* Configures Liferay to use [Mailcatcher](http://mailcatcher.me/) as dummy email server
+* [Web interface](http://localhost:11080) available to see all sent emails
 
 #### IPTables (VM Local ports) #####
 
@@ -125,16 +131,18 @@ Example: sudo service tomcat8081 start
 * 8081 tomcat2 (Cluster only)
 * 23301-23351 Multicast (Cluster only)
 * 8180 solr (Optional)
+* 1080 Mailcatcher web interface (Optional)
 
 #### VM Exposed Ports #####
 
-* host: 1080, guest: 80
-* host: 18080, guest: 8080
-* host: 18081, guest: 8081
-* host: 18000, guest: 8000
-* host: 19090, guest: 9090
-* host: 19091, guest: 9091
-* host: 18180, guest: 8180
+* host: 1080, guest: 80    (Apache2)
+* host: 18080, guest: 8080 (Tomcat - Liferay node 1)
+* host: 18081, guest: 8081 (Tomcat - Liferay node 2)
+* host: 18000, guest: 8000 (Tomcat debug - Liferay node 1)
+* host: 19090, guest: 9090 (jmx)
+* host: 19091, guest: 9091 (jmx)
+* host: 18180, guest: 8180 (SOLR)
+* host: 11080, guest: 1080 (Mailcatcher)
 
 ### Contribution guidelines ###
 

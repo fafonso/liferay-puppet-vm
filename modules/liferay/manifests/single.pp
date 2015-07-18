@@ -20,6 +20,7 @@ define liferay::single(
   $data_dl_path         = "",
   $liferay_db,
   $solr_distribution,
+  $mail_server_port,
   ) {
 
   $liferay_path      = "${install_path}/${liferay_folder}"

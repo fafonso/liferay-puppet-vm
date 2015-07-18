@@ -16,6 +16,7 @@ class liferay(
   $liferay_db,
   $solr_http_port       = "",
   $solr_distribution    = "",
+  $mail_server_port     = "",
   ) {
 
   $module_files_location = "/etc/puppet/modules/liferay/files"
@@ -90,6 +91,7 @@ class liferay(
       permsize              => $permsize,
       liferay_db            => $liferay_db,
       solr_distribution     => $solr_distribution,
+      mail_server_port      => $mail_server_port,
       require               => Util::Get["liferay"],
     }
 
@@ -111,6 +113,7 @@ class liferay(
       permsize              => $permsize,
       liferay_db            => $liferay_db,
       solr_distribution     => $solr_distribution,
+      mail_server_port      => $mail_server_port,
       require               => Util::Get["liferay"],
     }
 

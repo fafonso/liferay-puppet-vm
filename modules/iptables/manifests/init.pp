@@ -1,6 +1,7 @@
 class iptables (
-  $cluster,
-  $solr,
+    $cluster,
+    $solr,
+    $mail_server,
   ){
 
   resources { "firewall":
@@ -52,6 +53,14 @@ class iptables (
   if ($solr) {
     firewall { '105 allow access to solr':
       port   => [8180],
+      proto  => tcp,
+      action => accept,
+    }
+  }
+
+  if ($mail_server) {
+    firewall { '106 allow access to mailcatcher':
+      port   => [1080],
       proto  => tcp,
       action => accept,
     }

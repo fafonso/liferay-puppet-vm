@@ -45,6 +45,9 @@ class { 'vmbuilder' :
   ############### SOLR
   #Default should be 3.5.0 for CE edition
   #solr_distribution    => "3.5.0", 
+
+  ############### Mail Server
+  #mail_server          => "mailcatcher",
 }
 
 

@@ -14,6 +14,7 @@ class liferay::cluster(
   $liferay_group,
   $liferay_db,
   $solr_distribution,
+  $mail_server_port,
   ) {
 
   #Node configurations
@@ -68,6 +69,7 @@ class liferay::cluster(
     ajp_port              => "${node1_ajp_port}",
     liferay_db            => $liferay_db,
     solr_distribution     => $solr_distribution,
+    mail_server_port      => $mail_server_port,
     require               => [
       File["${install_path}"],
       Exec["clean-liferay-vagrant-dir"],
@@ -97,6 +99,7 @@ class liferay::cluster(
     ajp_port              => "${node2_ajp_port}",
     liferay_db            => $liferay_db,
     solr_distribution     => $solr_distribution,
+    mail_server_port      => $mail_server_port,
     require               => [
       File["${install_path}"],
       Exec["clean-liferay-vagrant-dir"],
