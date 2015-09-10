@@ -24,7 +24,7 @@ class iptables::pre {
     action  => 'accept',
   }->
   firewall { '006 Allow inbound SSH':
-    port     => 22,
+    dport     => 22,
     proto    => tcp,
     action   => accept,
   }

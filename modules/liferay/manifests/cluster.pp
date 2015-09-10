@@ -18,12 +18,18 @@ class liferay::cluster(
   ) {
 
   #Node configurations
-  $node1_name     = "node1"
-  $node1_ajp_port = "8009"
-  $node2_name     = "node2"
-  $node2_ajp_port = "8010"
+  $node1_name      = "node1"
+  $node1_ajp_port  = "8009"
+  $node1_http_port = "8080"
+  $node2_name      = "node2"
+  $node2_ajp_port  = "8010"
+  $node2_http_port = "8081"
 
+  #For apache configuration
   $ajp_nodes      = ["BalancerMember ajp://localhost:${node1_ajp_port} route=${node1_name}" , "BalancerMember ajp://localhost:${node2_ajp_port} route=${node2_name}"]
+
+  #For NginX configuration
+  $nginx_nodes    = ["server localhost:${node1_http_port} max_fails=1 fail_timeout=20s; ", "server localhost:${node2_http_port} max_fails=1 fail_timeout=20s; "]
 
   #Ensure that we have the root install path directory
   file {"${install_path}":
@@ -63,7 +69,7 @@ class liferay::cluster(
     permsize              => $permsize,
     cluster_conf          => true,
     data_dl_path          => "${install_path}/data/document_library",
-    http_port             => "8080",
+    http_port             => "${node1_http_port}",
     shutdown_port         => "8005",
     redirect_port         => "8443",
     ajp_port              => "${node1_ajp_port}",
@@ -93,7 +99,7 @@ class liferay::cluster(
     permsize              => $permsize,
     cluster_conf          => true,
     data_dl_path          => "${install_path}/data/document_library",
-    http_port             => "8081",
+    http_port             => "${node2_http_port}",
     shutdown_port         => "8006",
     redirect_port         => "8444",
     ajp_port              => "${node2_ajp_port}",

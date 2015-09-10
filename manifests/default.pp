@@ -48,6 +48,11 @@ class { 'vmbuilder' :
 
   ############### Mail Server
   #mail_server          => "mailcatcher",
+
+  ############### Http server
+  #By default will not install a http server
+  #possible values = apache2 | nginx
+  #httpserver           => "apache2",
 }
 
 

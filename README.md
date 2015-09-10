@@ -95,19 +95,27 @@ Example: sudo service tomcat8081 start
 * Http ports configured are 8080 for node1 and 8081 for node2
 * Uses the default Liferay cluster configuration (Multicast and RMI)
 
-#### Apache2 #####
+#### HTTP Server (Optional) ####
 
-* Configured with http proxy from port 80 to 8080
-* Uses mod-jk
-* Not configured to serve static content
-
-#### Apache2 (Cluster) #####
-
-* Configured with http proxy from port 80 to 8080/8081
-* Sticky sessions
-* Load balancing configured with "by request" approach
-* Uses proxy, proxy_ajp, proxy_balancer, lbmethod_byrequest and slotmem_shm modules
-* Not configured to serve static content
+* By default, none is used
+* Apache2
+	* Configured with http proxy from port 80 to 8080
+	* Uses mod-jk
+	* Not configured to serve static content
+* Apache2 (Cluster)
+	* Configured with http proxy from port 80 to 8080/8081
+	* Sticky sessions
+	* Load balancing configured with "by request" approach
+	* Uses proxy, proxy_ajp, proxy_balancer, lbmethod_byrequest and slotmem_shm modules
+	* Not configured to serve static content
+* NginX
+	* Configured with http proxy from port 80 to 8080
+	* Using HTTP instead of AJP
+	* Not configured to serve static content
+* NginX (Cluster)
+	* Configured with http proxy from port 80 to 8080/8081
+	* Not configured to serve static content
+	* Using ip_hash (don't rely on AJP to attach the sticky session via jvmRoute)
 
 #### SOLR (Optional) #####
 

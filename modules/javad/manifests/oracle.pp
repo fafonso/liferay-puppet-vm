@@ -1,13 +1,9 @@
 class javad::oracle() {
 
-	#Adding ppa to get Oracle Java
+  #Adding ppa to get Oracle Java
   package { 'python-software-properties':
     ensure => present,
-  }
-
-  apt::ppa { 'ppa:webupd8team/java':
-    require     => Package['python-software-properties'],
-  }
+  } 
 
   #Get and install Oracle Java
   exec {

@@ -20,7 +20,7 @@ class solr::3xx(
 
   #Tomcat Conf
   $tomcat7_install_path = "${solr_install_path}/tomcat7"
-  $tomcat_url           = "http://mirrors.whoishostingthis.com/apache/tomcat/tomcat-7/v7.0.63/bin/apache-tomcat-7.0.63.tar.gz"
+  $tomcat_url           = "http://mirrors.whoishostingthis.com/apache/tomcat/tomcat-7/v7.0.64/bin/apache-tomcat-7.0.64.tar.gz"
   $java_opts            = "$JAVA_OPTS -Dfile.encoding=UTF8 -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false -Dsolr.solr.home=${solr_home} -Dsolr.velocity.enabled=false"
   $catalina_opts        = "$CATALINA_OPTS -Duser.timezone=GMT -Xmx${xmx}m -XX:MaxPermSize=${permsize}m"
 

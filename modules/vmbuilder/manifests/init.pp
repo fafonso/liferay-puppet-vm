@@ -13,12 +13,15 @@ class vmbuilder(
     $xmx                  = "1024",
     $permsize             = "256",
     $use_firewall         = false,
-    $httpserver           = "apache2",
+    $httpserver           = "",
     $java_distribution    = "oracle",
     $solr_distribution    = "",
     $mail_server          = "",
   ) {
   
+  #Setup and updating APT
+  include aptsetup
+
   #Ensure that we have unzip and wget to use across all the modules
   #Limitation to puppet3
   package {"unzip":
@@ -55,13 +58,6 @@ class vmbuilder(
   #Setting the proper timezone
   class { 'timezone':
       timezone => $timzone,
-  }
-
-  #Updating APT
-  class { 'apt':
-    update => {
-      frequency => 'daily',
-    }
   }
 
   #Setup Java distribution
@@ -123,14 +119,13 @@ class vmbuilder(
       Class['users'],
       Class['db'],
     ],
-  }
+  } 
 
   #Setup httpserver (default apache2)
   class {'httpserver' :
     httpserver => $httpserver,
     cluster    => $liferay_cluster,
     require    => [
-      Class['apt'], 
       Class['liferay'],
     ],
   }

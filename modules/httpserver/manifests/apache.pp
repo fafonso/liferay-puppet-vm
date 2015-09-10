@@ -71,8 +71,8 @@ class httpserver::apache (
     }
 
     file {"jkmount.conf":
-      path => "${apache_home}/conf-available/jkmount.conf",
-      source => "puppet:///modules/httpserver/jkmount.conf",
+      path    => "${apache_home}/conf-available/jkmount.conf",
+      source  => "puppet:///modules/httpserver/apache-jkmount.conf",
       require => Exec["valid_apache_home"],
     }
 
