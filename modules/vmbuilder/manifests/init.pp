@@ -5,19 +5,24 @@ class vmbuilder(
     $timzone              = "Europe/Dublin",
     $liferay_user         = "liferay",
     $liferay_group        = "www",
-    $install_path         = "/opt/liferay",
+    $install_path         = "/opt",
     $liferay_db           = "mysql",
     $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga4-20150416163831865.zip",
     $liferay_folder       = "liferay-portal-6.2-ce-ga4",
+    $tomcat_folder        = "tomcat-7.0.42",
+    $liferay_version      = "6.2.3%20GA4",
     $liferay_cluster      = false,
-    $xmx                  = "1024",
-    $permsize             = "256",
+    $xmx                  = "2048",
+    $permsize             = "512",
     $use_firewall         = false,
     $httpserver           = "",
     $java_distribution    = "oracle",
     $solr_distribution    = "",
     $mail_server          = "",
+    $apm                  = "",
   ) {
+
+  $liferay_install_path = "${install_path}/liferay"
   
   #Setup and updating APT
   include aptsetup
@@ -49,7 +54,7 @@ class vmbuilder(
   class { 'users' :
     liferay_user      => $liferay_user,
     liferay_group     => $liferay_group,
-    liferay_user_home => $install_path,
+    liferay_user_home => $liferay_install_path,
   }
 
   #Configuring ntp module
@@ -97,27 +102,43 @@ class vmbuilder(
     }
   }
 
+  #Install the APM tool
+  class {'apm' :
+    apm                  => $apm,
+    install_path         => $install_path,
+    liferay_cluster      => $liferay_cluster,
+    java_distribution   => $java_distribution,
+    require              => [
+      Class['javad'], 
+      Class['users'],
+    ],
+  }
+
   #Setup Liferay
   class { 'liferay' :
     db_user              => $db_user,
     db_password          => $db_password,
     db_name              => $db_name,
-    install_path         => $install_path, 
+    install_path         => $liferay_install_path, 
     liferay_user         => $liferay_user,
     liferay_group        => $liferay_group,
     liferay_cluster      => $liferay_cluster,
     liferay_zip_filename => $liferay_zip_filename,
     liferay_folder       => $liferay_folder,
+    tomcat_folder        => $tomcat_folder,
+    version              => $liferay_version,
     xmx                  => $xmx,
     permsize             => $permsize,
     liferay_db           => $liferay_db,
     solr_http_port       => $solr_http_port,
     solr_distribution    => $solr_distribution,
     mail_server_port     => $mail_server_port,
+    apm                  => $apm,
     require              => [
-      Class['java'], 
+      Class['javad'], 
       Class['users'],
       Class['db'],
+      Class['apm'],
     ],
   } 
 
@@ -136,6 +157,7 @@ class vmbuilder(
       cluster     => $liferay_cluster,
       solr        => $solr_distribution,
       mail_server => $mail_server,
+      apm         => $apm,
     }
   }
 

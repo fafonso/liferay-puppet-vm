@@ -5,6 +5,7 @@ define util::get(
   $zip_file_location,
   ) {
 
+  
   $webapp_url        = "${$base_url}/${version}/${zip_filename}"
 
   file {"${title}-zip-file-location":

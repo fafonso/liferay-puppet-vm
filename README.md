@@ -47,6 +47,7 @@ Example: sudo service tomcat8081 start
 * OS: [Ubuntu](https://atlas.hashicorp.com/ubuntu/boxes/trusty64) - Official Ubuntu Server 14.04 LTS (Trusty Tahr) builds
 * CPU: 2
 * RAM: 4096 (can be set to 3072 for single instance usage)
+* Changes can be done adjusting vb.memory and vb.cpus parameters in Vagrantfile
 
 #### Groups #####
 
@@ -128,22 +129,33 @@ Example: sudo service tomcat8081 start
 * Configures Liferay to use [Mailcatcher](http://mailcatcher.me/) as dummy email server
 * [Web interface](http://localhost:11080) available to see all sent emails
 
+#### APM tool (Optional) #####
+
+* By default, none is used
+* [DynaTrace](http://www.dynatrace.com/en/index.html)
+	* For the sake of simplicity and resource consumption, it is configured to run only with single node and Oracle JDK
+	* The current configuration is installing DynaTrace Server and Collector on the same VM, as so, VM resources need to be increased (tested with 6GB RAM and 4 CPUs)
+	* Requires ulimit to be increased to 2048 (uses [ulimit module](https://forge.puppetlabs.com/arioch/ulimit/readme))
+	* Used UNIX services: dynaTraceServer and dynaTraceCollector
+	* [DynaTrace Web client](https://localhost:19911/) (user and password = admin)
+
 #### IPTables (VM Local ports) #####
 
 * Optional - Disabled by default
 * [Firewall Module](https://forge.puppetlabs.com/puppetlabs/firewall)
 * 22 ssh
-* 80, 443 apache
+* 80, 443 http server
 * 8080, 8000 tomcat
 * 9090, 9091 jmx
 * 8081 tomcat2 (Cluster only)
 * 23301-23351 Multicast (Cluster only)
 * 8180 solr (Optional)
 * 1080 Mailcatcher web interface (Optional)
+* 8021, 2021, 9911 DynaTrace (Optional)
 
 #### VM Exposed Ports #####
 
-* host: 1080, guest: 80    (Apache2)
+* host: 1080, guest: 80    (Http server)
 * host: 18080, guest: 8080 (Tomcat - Liferay node 1)
 * host: 18081, guest: 8081 (Tomcat - Liferay node 2)
 * host: 18000, guest: 8000 (Tomcat debug - Liferay node 1)
@@ -151,7 +163,14 @@ Example: sudo service tomcat8081 start
 * host: 19091, guest: 9091 (jmx)
 * host: 18180, guest: 8180 (SOLR)
 * host: 11080, guest: 1080 (Mailcatcher)
+* host: 12021, guest: 2021 (Dynatrace client)
+* host: 18021, guest: 8021 (Dynatrace web client)
+* host: 19911, guest: 9911 (Dynatrace web client)
 
 ### Contribution guidelines ###
 
 Feedback, contributions and improvements are welcome. Feel free to contact me.
+
+### Special Thanks ###
+
+Special thanks to Thiago Moreira for his valuable input to this project at earlier stage.

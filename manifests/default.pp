@@ -14,7 +14,7 @@ class { 'vmbuilder' :
   ############### Liferay configuration 
   #liferay_user         => "liferay",
   #liferay_group        => "www",
-  #install_path         => "/opt/liferay",
+  #install_path         => "/opt",
 
   ############### Liferay Databse to use 
   #Possibel  values are: mysql, postgresql
@@ -53,6 +53,15 @@ class { 'vmbuilder' :
   #By default will not install a http server
   #possible values = apache2 | nginx
   #httpserver           => "apache2",
+  #httpserver           => "nginx",
+
+  ############### APM
+  #By default will not install any APM
+  #possible values = dynatrace
+  #Note: To have Dynatrace, you will need at least 6GB and 4CPU available for the VM
+  #Will run only with single node. 
+  #Webagent is installed only for appache2.
+  #apm                  => "dynatrace",
 }
 
 

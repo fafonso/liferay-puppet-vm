@@ -23,14 +23,29 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  #Webserver
   config.vm.network :forwarded_port, host: 1080,  guest: 80
+
+  #Tomcat - Liferay
   config.vm.network :forwarded_port, host: 18080, guest: 8080
   config.vm.network :forwarded_port, host: 18000, guest: 8000
   config.vm.network :forwarded_port, host: 18081, guest: 8081
+
+  #SOLR
   config.vm.network :forwarded_port, host: 18180, guest: 8180
+  
+  #JMX
   config.vm.network :forwarded_port, host: 19090, guest: 9090
   config.vm.network :forwarded_port, host: 19091, guest: 9091
+  
+  #Mailcatcher
   config.vm.network :forwarded_port, host: 11080, guest: 1080
+
+  #Dynatrace ports
+  config.vm.network :forwarded_port, host: 12021, guest: 2021
+  config.vm.network :forwarded_port, host: 18021, guest: 8021
+  config.vm.network :forwarded_port, host: 19911, guest: 9911
   #config.vm.network :forwarded_port, host: 15432, guest: 5432
   #config.vm.network :forwarded_port, host: 13306, guest: 3306
   
@@ -72,9 +87,13 @@ Vagrant.configure(2) do |config|
     #vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000 ]
   
      # Customize the amount of memory on the VM:
-     # vb.memory = "3072"
      vb.memory = "4096"
      vb.cpus = 2
+     
+     #Configuration for Dynatrace
+     #vb.memory = "6144"
+     #vb.cpus = 4
+
      vb.name = "vagrant.liferay.com"
   end
 
@@ -104,7 +123,8 @@ Vagrant.configure(2) do |config|
                   puppet module install saz-timezone;
                   puppet module install puppetlabs-ntp;
                   puppet module install puppetlabs-firewall;
-                  puppet module install puppetlabs-tomcat"
+                  puppet module install puppetlabs-tomcat;
+                  puppet module install arioch-ulimit"
   end
 
 
@@ -125,4 +145,24 @@ Vagrant.configure(2) do |config|
 
   # To avoid the Warning: Could not retrieve fact fqdn
   config.vm.hostname = "vagrant.liferay.com"
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    # Configure cached packages to be shared between instances of the same base box.
+    # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
+    config.cache.scope = :box
+
+    # OPTIONAL: If you are using VirtualBox, you might want to use that to enable
+    # NFS for shared folders. This is also very useful for vagrant-libvirt if you
+    # want bi-directional sync
+    #config.cache.synced_folder_opts = {
+    #  type: :nfs,
+      # The nolock option can be useful for an NFSv3 client that wants to avoid the
+      # NLM sideband protocol. Without this option, apt-get might hang if it tries
+      # to lock files needed for /var/cache/* operations. All of this can be avoided
+      # by using NFSv4 everywhere. Please note that the tcp option is not the default.
+    #  mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+    #}
+    # For more information please check http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
+  end
+
 end

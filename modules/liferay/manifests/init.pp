@@ -1,14 +1,14 @@
 class liferay(
-  $liferay_folder       = "liferay-portal-6.2-ce-ga4", 
-  $tomcat_folder        = "tomcat-7.0.42", 
-  $version              = "6.2.3%20GA4",
-  $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga4-20150416163831865.zip",
-  $liferay_vagrant_dir   = "/vagrant/liferay",
+  $liferay_folder, 
+  $tomcat_folder, 
+  $version,
+  $liferay_zip_filename,
+  $liferay_vagrant_dir  = "/vagrant/liferay",
   $db_user,
   $db_password,
   $db_name,
-  $xmx                  = "2048",
-  $permsize             = "512",
+  $xmx,
+  $permsize,
   $install_path,
   $liferay_user,
   $liferay_group,
@@ -17,6 +17,7 @@ class liferay(
   $solr_http_port       = "",
   $solr_distribution    = "",
   $mail_server_port     = "",
+  $apm                  = "",
   ) {
 
   $module_files_location = "/etc/puppet/modules/liferay/files"
@@ -92,6 +93,7 @@ class liferay(
       liferay_db            => $liferay_db,
       solr_distribution     => $solr_distribution,
       mail_server_port      => $mail_server_port,
+      apm                   => $apm,
       require               => Util::Get["liferay"],
     }
 
@@ -114,6 +116,7 @@ class liferay(
       liferay_db            => $liferay_db,
       solr_distribution     => $solr_distribution,
       mail_server_port      => $mail_server_port,
+      apm                   => $apm,
       require               => Util::Get["liferay"],
     }
 

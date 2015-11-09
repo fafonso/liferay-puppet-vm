@@ -2,6 +2,7 @@ class iptables (
     $cluster,
     $solr,
     $mail_server,
+    $apm,
   ){
 
   resources { "firewall":
@@ -61,6 +62,14 @@ class iptables (
   if ($mail_server) {
     firewall { '106 allow access to mailcatcher':
       dport   => [1080],
+      proto  => tcp,
+      action => accept,
+    }
+  }
+
+  if ($apm == "dynatrace") {
+    firewall { '107 allow access to dynatrace':
+      dport   => [8021, 2021, 9911],
       proto  => tcp,
       action => accept,
     }

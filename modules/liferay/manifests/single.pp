@@ -21,11 +21,12 @@ define liferay::single(
   $liferay_db,
   $solr_distribution,
   $mail_server_port,
+  $apm,
   ) {
 
-  $liferay_path      = "${install_path}/${liferay_folder}"
-  $liferay_home      = $liferay_path
-  $tomcat_path       = "${liferay_path}/${tomcat_folder}"
+  $liferay_path       = "${install_path}/${liferay_folder}"
+  $liferay_home       = $liferay_path
+  $tomcat_path        = "${liferay_path}/${tomcat_folder}"
   $liferay_deploy_dir = "${liferay_vagrant_dir}/deploy"
 
 
@@ -149,6 +150,23 @@ define liferay::single(
     require => Exec["${title}-unzip-liferay"],
   }
 
+  # Wire APM agents
+  case $apm {
+    'dynatrace':  { 
+
+      #If using Dynatrace and single node instance, wire Dynatrace Agent and add JVM arguments for Tomcat
+      if (!$cluster_conf) {
+        $APM_AGENT_CONF = "-agentpath:${apm::dynatrace::dynatrace_agent_install_path}/agent/lib64/libdtagent.so=name=Tomcat,server=localhost:9998"
+      }
+
+    } 
+    
+    #Default scenario
+    default: { 
+      $APM_AGENT_CONF = ""
+    } #NOTHING TO DO
+  }
+
   file {"${title}-setenv.sh":
     path    => "${tomcat_path}/bin/setenv.sh",
     content => template('liferay/setenv.sh.erb'),
@@ -193,6 +211,7 @@ define liferay::single(
     service { "${service_name}":
       name    => "${service_name}",
       ensure  => "running",
+      enable  => true,
       require => [
           File["${title}-portal-ext.properties"],
           File["${title}-setenv.sh"],

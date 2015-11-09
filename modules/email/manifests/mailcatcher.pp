@@ -43,6 +43,7 @@ class email::mailcatcher(
     ensure    => running,
     provider  => upstart,
     hasstatus => true,
+    enable    => true,
     require   => [ File['mailcatcher.conf'], Package['mailcatcher'] ]
   }
 

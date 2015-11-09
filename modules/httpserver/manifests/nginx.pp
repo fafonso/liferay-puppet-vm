@@ -38,6 +38,7 @@ class httpserver::nginx(
   service { "nginx":
     ensure    => "running",
     subscribe => File["default.conf"],
+    enable    => true,
   }
 
 }
