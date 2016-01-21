@@ -22,6 +22,7 @@ define liferay::single(
   $solr_distribution,
   $mail_server_port,
   $apm,
+  $liferay_dev          = false,
   ) {
 
   $liferay_path       = "${install_path}/${liferay_folder}"
@@ -35,6 +36,11 @@ define liferay::single(
   } else {
     $service_name = "tomcat${http_port}"
   }
+
+  #If dev mode, add portal-developer.properties
+  if ($liferay_dev) {
+    $developer_properties_conf = "-Dexternal-properties=portal-developer.properties"
+  } 
 
   #Adjust parameters for template, according to the DB to use (default do MySQL)
   if ($liferay_db == "postgresql") {
@@ -205,7 +211,7 @@ define liferay::single(
   }
 
   if ($http_port == "8080") {
-  	# Specific confifurations for first node
+    # Specific confifurations for first node
 
     #We just want to start the first node 
     service { "${service_name}":

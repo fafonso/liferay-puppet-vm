@@ -86,15 +86,31 @@ Vagrant.configure(2) do |config|
     # Assure that the guest machine clock is synced with the host every 10s
     #vb.customize [ "guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000 ]
   
-     # Customize the amount of memory on the VM:
-     vb.memory = "4096"
-     vb.cpus = 2
+    # (Option 1) Customize the amount of memory on the VM:
+    #vb.memory = "4096"
+    #vb.cpus = 4
      
-     #Configuration for Dynatrace
-     #vb.memory = "6144"
-     #vb.cpus = 4
+    # (Option 2) Configuration for Dynatrace
+    #vb.memory = "6144"
+    #vb.cpus = 4
 
-     vb.name = "vagrant.liferay.com"
+    # (Option 3) RECOMMENDED APPROACH: Give VM 1/4 system memory & access to all cpu cores on the host
+    host = RbConfig::CONFIG['host_os']
+
+    if host =~ /darwin/
+      vb.cpus = `sysctl -n hw.ncpu`.to_i
+      # sysctl returns Bytes and we need to convert to MB
+      vb.memory = `sysctl -n hw.memsize`.to_i / 1024 / 1024 / 4
+    elsif host =~ /linux/
+      vb.cpus = `nproc`.to_i
+      # meminfo shows KB and we need to convert to MB
+      vb.memory = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / 4
+    else # sorry Windows folks, I can't help you
+      vb.cpus = 4
+      vb.memory = 4096
+    end
+
+    vb.name = "vagrant.liferay.com"
   end
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
@@ -155,12 +171,12 @@ Vagrant.configure(2) do |config|
     # NFS for shared folders. This is also very useful for vagrant-libvirt if you
     # want bi-directional sync
     #config.cache.synced_folder_opts = {
-    #  type: :nfs,
+      #type: :nfs,
       # The nolock option can be useful for an NFSv3 client that wants to avoid the
       # NLM sideband protocol. Without this option, apt-get might hang if it tries
       # to lock files needed for /var/cache/* operations. All of this can be avoided
       # by using NFSv4 everywhere. Please note that the tcp option is not the default.
-    #  mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+      #mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
     #}
     # For more information please check http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
   end

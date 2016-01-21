@@ -30,6 +30,10 @@ class { 'vmbuilder' :
   #Default to false
   #liferay_cluster      => true,
 
+  ################ Development mode
+  #Default to false
+  #liferay_dev          => true,
+
   ############### Tomcat info 
   ############### (in a cluster configuration, each of the nodes will get this JVM memory parameters)
   #xmx                  => "1024",

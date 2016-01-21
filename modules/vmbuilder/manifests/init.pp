@@ -7,10 +7,10 @@ class vmbuilder(
     $liferay_group        = "www",
     $install_path         = "/opt",
     $liferay_db           = "mysql",
-    $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga4-20150416163831865.zip",
-    $liferay_folder       = "liferay-portal-6.2-ce-ga4",
-    $tomcat_folder        = "tomcat-7.0.42",
-    $liferay_version      = "6.2.3%20GA4",
+    $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip",
+    $liferay_folder       = "liferay-portal-6.2-ce-ga6",
+    $tomcat_folder        = "tomcat-7.0.62",
+    $liferay_version      = "6.2.5%20GA6",
     $liferay_cluster      = false,
     $xmx                  = "2048",
     $permsize             = "512",
@@ -20,6 +20,7 @@ class vmbuilder(
     $solr_distribution    = "",
     $mail_server          = "",
     $apm                  = "",
+    $liferay_dev          = false,
   ) {
 
   $liferay_install_path = "${install_path}/liferay"
@@ -134,6 +135,7 @@ class vmbuilder(
     solr_distribution    => $solr_distribution,
     mail_server_port     => $mail_server_port,
     apm                  => $apm,
+    liferay_dev          => $liferay_dev,
     require              => [
       Class['javad'], 
       Class['users'],

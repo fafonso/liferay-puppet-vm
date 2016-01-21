@@ -12,15 +12,21 @@ class liferay(
   $install_path,
   $liferay_user,
   $liferay_group,
-  $liferay_cluster      = false,
+  $liferay_cluster,
   $liferay_db,
   $solr_http_port       = "",
   $solr_distribution    = "",
   $mail_server_port     = "",
   $apm                  = "",
+  $liferay_dev,
   ) {
 
   $module_files_location = "/etc/puppet/modules/liferay/files"
+
+  #Ensure that liferay_dev is only available for single node
+  if ($liferay_dev and $liferay_cluster) {
+    fail('Liferay development mode can only be used with single node')
+  }
 
   #SOLR configuration depending on solr version
   if ($solr_http_port) {
@@ -68,9 +74,9 @@ class liferay(
   #Prepararation tasks  
   util::get { 'liferay' :
     base_url             => "http://downloads.sourceforge.net/project/lportal/Liferay%20Portal",
-  	version              => $version,
-  	zip_filename         => $liferay_zip_filename,
-  	zip_file_location    => $module_files_location,
+    version              => $version,
+    zip_filename         => $liferay_zip_filename,
+    zip_file_location    => $module_files_location,
   }
 
   if($liferay_cluster) {
@@ -117,6 +123,7 @@ class liferay(
       solr_distribution     => $solr_distribution,
       mail_server_port      => $mail_server_port,
       apm                   => $apm,
+      liferay_dev           => $liferay_dev,
       require               => Util::Get["liferay"],
     }
 

@@ -12,13 +12,13 @@ Disclaimer: This setup is not prepared/tuned for production environments and its
 * [VirtualBox](https://www.virtualbox.org/)
 * [Ubuntu trusty64 - Vagrant box](https://atlas.hashicorp.com/ubuntu/boxes/trusty64)
 
-#### Default usage (Liferay 6.2 CE GA4) ####
+#### Default usage (Liferay 6.2 CE GA6) ####
 
 1. Open file "/manifests/default.pp"
 2. Adjust the initial parameters for your case (top of the file)
 3. Go to the terminal and execute "vagrant up" on the project root directory
 
-#### Cluster configuration (Liferay 6.2 CE GA4 / 2 nodes) ####
+#### Cluster configuration (Liferay 6.2 CE GA6 / 2 nodes) ####
 
 1. Open file "/manifests/default.pp"
 2. Uncomment cluster related configurations
@@ -78,16 +78,18 @@ Example: sudo service tomcat8081 start
 
 #### Liferay #####
 
-* Default usage will download Liferay 6.2 CE GA4 - bundled with tomcat
+* Default usage will download Liferay 6.2 CE GA6 - bundled with Tomcat (7.0.62)
 * Configured to access lportal database
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy for deployments
 * <VAGRANT_SHARED_FOLDER>/liferay/portal-ext.properties available for configurations 
 * Configures tomcat as an unix service
 * Use default port 8080 for http
+* Development mode (optional) 
+	* Will import portal-developer.properties file
 
 #### Liferay (Cluster) #####
 
-* Default usage will download Liferay 6.2 CE GA4 - bundled with tomcat
+* Default usage will download Liferay 6.2 CE GA6 - bundled with Tomcat (7.0.62)
 * Configured to access lportal database for both nodes
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/nodeX/deploy for deployments
 * <VAGRANT_SHARED_FOLDER>/liferay/nodeX/portal-ext.properties available for configurations 
