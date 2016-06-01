@@ -39,6 +39,23 @@ start() {
 	return 0
 }
 
+profile() {
+        pid=$(tomcat_pid)
+        if [ -n "$pid" ]
+        then
+                echo "Tomcat is already running (pid: $pid)"
+        else
+                # Start tomcat with profiler agent for yourkit
+                echo "Starting tomcat with profiler agent for yourkit"
+                ulimit -n 100000
+                umask 007
+                /bin/su -p -s /bin/sh <%=@liferay_user%> $TOMCAT_HOME/bin/startup_with_yjp.sh
+        fi
+
+
+        return 0
+}
+
 stop() {
 	pid=$(tomcat_pid)
 	if [ -n "$pid" ]
@@ -86,6 +103,9 @@ debug() {
 case $1 in
 start)
 	start
+;;
+profile)
+        profile
 ;;
 stop)
 	stop

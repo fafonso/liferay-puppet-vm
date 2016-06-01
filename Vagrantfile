@@ -52,7 +52,7 @@ Vagrant.configure(2) do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.network :private_network, ip: "192.168.10.01"
+  config.vm.network :private_network, ip: "192.168.10.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -131,16 +131,16 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell do |shell|
   shell.inline = "mkdir -p /etc/puppet/modules;
                   cp -r /vagrant/modules/* /etc/puppet/modules;
-                  puppet module install puppetlabs-stdlib;
-                  puppet module install puppetlabs-apt;
-                  puppet module install puppetlabs-mysql;
-                  puppet module install puppetlabs-java;
-                  puppet module install puppetlabs-postgresql;
-                  puppet module install saz-timezone;
-                  puppet module install puppetlabs-ntp;
-                  puppet module install puppetlabs-firewall;
-                  puppet module install puppetlabs-tomcat;
-                  puppet module install arioch-ulimit"
+                  puppet module install puppetlabs-stdlib --version 4.12.0;
+                  puppet module install puppetlabs-apt --version 2.2.2;
+                  puppet module install puppetlabs-mysql --version 3.7.0;
+                  puppet module install puppetlabs-java --version 1.5.0;
+                  puppet module install puppetlabs-postgresql --version 4.7.1;
+                  puppet module install saz-timezone --version 3.3.0;
+                  puppet module install puppetlabs-ntp --version 4.2.0;
+                  puppet module install puppetlabs-firewall --version 1.8.1;
+                  puppet module install puppetlabs-tomcat --version 1.5.0;
+                  puppet module install arioch-ulimit --version 0.0.2"
   end
 
 

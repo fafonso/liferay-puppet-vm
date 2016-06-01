@@ -23,8 +23,12 @@ class { 'vmbuilder' :
 
   ############### Install Liferay from local archive 
   #liferay_zip_filename => "liferay-portal-tomcat-6.2-ee-sp11-20150407182402908.zip",
+  
   #Liferay folder name inside zip archive
   #liferay_folder       => "liferay-portal-6.2-ee-sp11",
+  
+  #Tomcat folder (only if needed)
+  #tomcat_folder        => "tomcat-7.0.42",
 
   ################ Cluster configuration 
   #Default to false
