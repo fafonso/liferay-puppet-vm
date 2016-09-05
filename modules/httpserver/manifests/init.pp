@@ -1,6 +1,5 @@
 class httpserver (
     $httpserver,
-    $cluster,
   ) {
 
   
@@ -10,15 +9,11 @@ class httpserver (
 
   if ($httpserver == "apache2") {
     #Setup apache2
-    class { 'httpserver::apache':
-      cluster => $cluster,
-    }
+    class { 'httpserver::apache': }
   } 
   if ($httpserver == "nginx") {
     #Setup nginx
-    class { 'httpserver::nginx':
-      cluster => $cluster,
-    }
+    class { 'httpserver::nginx': }
   }
 
 

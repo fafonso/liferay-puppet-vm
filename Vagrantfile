@@ -32,22 +32,12 @@ Vagrant.configure(2) do |config|
   config.vm.network :forwarded_port, host: 18000, guest: 8000
   config.vm.network :forwarded_port, host: 18081, guest: 8081
 
-  #SOLR
-  config.vm.network :forwarded_port, host: 18180, guest: 8180
-  
   #JMX
   config.vm.network :forwarded_port, host: 19090, guest: 9090
   config.vm.network :forwarded_port, host: 19091, guest: 9091
   
   #Mailcatcher
   config.vm.network :forwarded_port, host: 11080, guest: 1080
-
-  #Dynatrace ports
-  config.vm.network :forwarded_port, host: 12021, guest: 2021
-  config.vm.network :forwarded_port, host: 18021, guest: 8021
-  config.vm.network :forwarded_port, host: 19911, guest: 9911
-  #config.vm.network :forwarded_port, host: 15432, guest: 5432
-  #config.vm.network :forwarded_port, host: 13306, guest: 3306
   
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -90,11 +80,7 @@ Vagrant.configure(2) do |config|
     #vb.memory = "4096"
     #vb.cpus = 4
      
-    # (Option 2) Configuration for Dynatrace
-    #vb.memory = "6144"
-    #vb.cpus = 4
-
-    # (Option 3) RECOMMENDED APPROACH: Give VM 1/4 system memory & access to all cpu cores on the host
+    # (Option 2) RECOMMENDED APPROACH: Give VM 1/4 system memory & access to all cpu cores on the host
     host = RbConfig::CONFIG['host_os']
 
     if host =~ /darwin/

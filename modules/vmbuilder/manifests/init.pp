@@ -7,19 +7,16 @@ class vmbuilder(
     $liferay_group        = "www",
     $install_path         = "/opt",
     $liferay_db           = "mysql",
-    $liferay_zip_filename = "liferay-portal-tomcat-6.2-ce-ga6-20160112152609836.zip",
-    $liferay_folder       = "liferay-portal-6.2-ce-ga6",
-    $tomcat_folder        = "tomcat-7.0.62",
-    $liferay_version      = "6.2.5%20GA6",
-    $liferay_cluster      = false,
+    $liferay_zip_filename = "liferay-ce-portal-tomcat-7.0-ga3-20160804222206210.zip",
+    $liferay_folder       = "liferay-ce-portal-7.0-ga3",
+    $tomcat_folder        = "tomcat-8.0.32",
+    $liferay_version      = "7.0.2%20GA3",
     $xmx                  = "2048",
     $permsize             = "512",
     $use_firewall         = false,
     $httpserver           = "",
     $java_distribution    = "oracle",
-    $solr_distribution    = "",
     $mail_server          = "",
-    $apm                  = "",
     $liferay_dev          = false,
   ) {
 
@@ -79,18 +76,6 @@ class vmbuilder(
     liferay_db  => $liferay_db,
   }
 
-  #Install SOLR
-  if ($solr_distribution) {
-    $solr_http_port = "8180"
-
-    class { 'solr':
-      distribution  => $solr_distribution,
-      liferay_user  => $liferay_user,
-      liferay_group => $liferay_group,
-      http_port     => $solr_http_port,
-    }
-  }
-
   #Install the mail server
   if ($mail_server) {
     $mail_server_port = "1025"
@@ -103,18 +88,6 @@ class vmbuilder(
     }
   }
 
-  #Install the APM tool
-  class {'apm' :
-    apm                  => $apm,
-    install_path         => $install_path,
-    liferay_cluster      => $liferay_cluster,
-    java_distribution   => $java_distribution,
-    require              => [
-      Class['javad'], 
-      Class['users'],
-    ],
-  }
-
   #Setup Liferay
   class { 'liferay' :
     db_user              => $db_user,
@@ -123,7 +96,6 @@ class vmbuilder(
     install_path         => $liferay_install_path, 
     liferay_user         => $liferay_user,
     liferay_group        => $liferay_group,
-    liferay_cluster      => $liferay_cluster,
     liferay_zip_filename => $liferay_zip_filename,
     liferay_folder       => $liferay_folder,
     tomcat_folder        => $tomcat_folder,
@@ -131,23 +103,18 @@ class vmbuilder(
     xmx                  => $xmx,
     permsize             => $permsize,
     liferay_db           => $liferay_db,
-    solr_http_port       => $solr_http_port,
-    solr_distribution    => $solr_distribution,
     mail_server_port     => $mail_server_port,
-    apm                  => $apm,
     liferay_dev          => $liferay_dev,
     require              => [
       Class['javad'], 
       Class['users'],
       Class['db'],
-      Class['apm'],
     ],
   } 
 
   #Setup httpserver (default apache2)
   class {'httpserver' :
     httpserver => $httpserver,
-    cluster    => $liferay_cluster,
     require    => [
       Class['liferay'],
     ],
@@ -156,10 +123,7 @@ class vmbuilder(
   #Setup firewall
   if ($use_firewall) {
     class {'iptables' :
-      cluster     => $liferay_cluster,
-      solr        => $solr_distribution,
       mail_server => $mail_server,
-      apm         => $apm,
     }
   }
 

@@ -29,10 +29,22 @@ class email::mailcatcher(
     before => Package['mailcatcher'],
   }
 
-  package { 'mailcatcher':
+  # https://github.com/sj26/mailcatcher/issues/277
+  # Should give an error but it will work
+  # Don't forget to check if mailcatcher service is up and running.
+  # If not, please start the service manually (sudo service mailcatcher start)
+  package { 'mime-types':
     provider => gem,
-    ensure   => present,
+    ensure   => '< 3',
+    before   => Package['mailcatcher'],
   }
+
+  package { 'mailcatcher':
+    provider        => gem,
+    ensure          => '0.6.4',
+    install_options => '--conservative',
+  }
+
 
   file { '/etc/init/mailcatcher.conf':
     content => template('email/upstart.conf.erb'),

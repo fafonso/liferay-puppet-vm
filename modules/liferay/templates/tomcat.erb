@@ -100,12 +100,26 @@ debug() {
 	return 0
 }
 
+soften() {
+	# can and should be run when the server is running in dev mode to allow deployment and configuration changes.
+    /bin/chown -R <%=@liferay_user%> $TOMCAT_HOME/webapps $TOMCAT_HOME/conf $TOMCAT_HOME/../deploy $TOMCAT_HOME/../osgi/modules
+}
+
+harden() {
+	# can and should be run while the server is running in prod mode, to block deployment and configurastion changes.
+    /bin/chown -R root $TOMCAT_HOME/webapps $TOMCAT_HOME/conf $TOMCAT_HOME/../deploy $TOMCAT_HOME/../osgi/modules
+}
+
+
 case $1 in
 start)
+	# By default it will allow deployment and configuration changes
+	# If in production, run harden command after starting tomcat
+	soften
 	start
 ;;
 profile)
-        profile
+    profile
 ;;
 stop)
 	stop
@@ -116,6 +130,12 @@ restart)
 ;;
 debug)
 	debug
+;;
+soften)
+    soften
+;;
+harden)
+    harden
 ;;
 status)
 	pid=$(tomcat_pid)

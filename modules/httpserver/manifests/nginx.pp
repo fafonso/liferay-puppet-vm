@@ -1,13 +1,8 @@
 class httpserver::nginx(
     $nginx_home = "/etc/nginx",
-    $cluster,
   ) {
 
-  if ($cluster) {
-    $nodes = $liferay::cluster::nginx_nodes
-  } else {
-    $nodes    = ["server localhost:8080 max_fails=1 fail_timeout=20s; "]
-  }
+  $nodes    = ["server localhost:8080 max_fails=1 fail_timeout=20s; "]
 
   package {"nginx":
     ensure => "installed",

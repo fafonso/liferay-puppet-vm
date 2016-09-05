@@ -15,6 +15,11 @@ class db::mysql(
       remove_default_accounts => true,
       override_options        => $override_options,
       restart                 => true,
+      package_name            => 'mysql-server-5.6',
+    } 
+    
+    class {'mysql::client':
+      package_name   => 'mysql-client-5.6',
     }
 
     mysql::db { $db_name :

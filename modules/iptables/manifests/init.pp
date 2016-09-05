@@ -1,8 +1,5 @@
 class iptables (
-    $cluster,
-    $solr,
     $mail_server,
-    $apm,
   ){
 
   resources { "firewall":
@@ -28,48 +25,15 @@ class iptables (
     action => accept,
   }
 
-  if ($cluster) {
-    #Adds extra cluster ports
-    firewall { '102 allow access to tomcat extra cluster ports':
-      dport   => [8081],
-      proto  => tcp,
-      action => accept,
-    }
-
-    firewall { '103 allow access to multicast port for chache syncronization':
-      dst_type => 'MULTICAST',
-      pkttype  => 'multicast',
-      dport     => '23301-23351',
-      proto    => udp,
-      action   => accept,
-    }
-  }
-
   firewall { '104 allow access to JMX':
     dport   => [9090, 9091],
     proto  => tcp,
     action => accept,
   }
 
-  if ($solr) {
-    firewall { '105 allow access to solr':
-      dport   => [8180],
-      proto  => tcp,
-      action => accept,
-    }
-  }
-
   if ($mail_server) {
     firewall { '106 allow access to mailcatcher':
       dport   => [1080],
-      proto  => tcp,
-      action => accept,
-    }
-  }
-
-  if ($apm == "dynatrace") {
-    firewall { '107 allow access to dynatrace':
-      dport   => [8021, 2021, 9911],
       proto  => tcp,
       action => accept,
     }

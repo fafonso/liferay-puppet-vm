@@ -22,24 +22,19 @@ class { 'vmbuilder' :
   #liferay_db           => "postgresql",
 
   ############### Install Liferay from local archive 
-  #liferay_zip_filename => "liferay-portal-tomcat-6.2-ee-sp11-20150407182402908.zip",
+  #liferay_zip_filename => "liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip",
   
   #Liferay folder name inside zip archive
-  #liferay_folder       => "liferay-portal-6.2-ee-sp11",
+  #liferay_folder       => "liferay-dxp-digital-enterprise-7.0-ga1",
   
   #Tomcat folder (only if needed)
-  #tomcat_folder        => "tomcat-7.0.42",
-
-  ################ Cluster configuration 
-  #Default to false
-  #liferay_cluster      => true,
+  #tomcat_folder        => "tomcat-8.0.32",
 
   ################ Development mode
   #Default to false
   #liferay_dev          => true,
 
   ############### Tomcat info 
-  ############### (in a cluster configuration, each of the nodes will get this JVM memory parameters)
   #xmx                  => "1024",
   #permsize             => "256",
 
@@ -50,11 +45,13 @@ class { 'vmbuilder' :
   #Default oracle
   #java_distribution    => "openjdk",
 
-  ############### SOLR
-  #Default should be 3.5.0 for CE edition
-  #solr_distribution    => "3.5.0", 
-
   ############### Mail Server
+
+  # https://github.com/sj26/mailcatcher/issues/277
+  # Should give an error but it will work
+  # Don't forget to check if mailcatcher service is up and running.
+  # If not, please start the service manually (sudo service mailcatcher start)
+  
   #mail_server          => "mailcatcher",
 
   ############### Http server
@@ -63,13 +60,7 @@ class { 'vmbuilder' :
   #httpserver           => "apache2",
   #httpserver           => "nginx",
 
-  ############### APM
-  #By default will not install any APM
-  #possible values = dynatrace
-  #Note: To have Dynatrace, you will need at least 6GB and 4CPU available for the VM
-  #Will run only with single node. 
-  #Webagent is installed only for appache2.
-  #apm                  => "dynatrace",
+
 }
 
 

@@ -8,6 +8,7 @@ class aptsetup {
 
 	#Add required repo
 	apt::ppa { 'ppa:webupd8team/java': } ->
+	apt::ppa { 'ppa:openjdk-r/ppa': } ->
 
 	Exec['apt_update'] -> 
 	

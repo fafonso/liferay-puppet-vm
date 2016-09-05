@@ -16,12 +16,9 @@ define liferay::single(
   $shutdown_port        = "8005",
   $redirect_port        = "8443",
   $ajp_port             = "8009",
-  $cluster_conf         = false,
   $data_dl_path         = "",
   $liferay_db,
-  $solr_distribution,
   $mail_server_port,
-  $apm,
   $liferay_dev          = false,
   ) {
 
@@ -117,6 +114,19 @@ define liferay::single(
     mode    => 2775,
   } ->
 
+  exec {"${title}-move-wars-to-new-deploy-folder":
+    command => "mv ${liferay_home}/deploy/* ${liferay_deploy_dir}/",
+    path    => ["/usr/bin", "/bin"],
+    onlyif  => ["test -d ${liferay_home}/deploy"]
+  } ->
+
+  exec {"${title}-remove-old-liferay-deploy-dir":
+    command => "rm -fR ${liferay_home}/deploy",
+    path    => ["/usr/bin", "/bin"],
+    onlyif  => ["test -d ${liferay_home}/deploy"],
+    require => Exec["${title}-clean-liferay-home"]
+  } ->
+
   file { "${title}-deploy":
     path    => "$liferay_home/deploy",
     ensure  => "link",
@@ -126,24 +136,14 @@ define liferay::single(
     target  => $liferay_deploy_dir,
   }
 
-  if ($cluster_conf) {
-    file {"${title}-portal-ext.properties":
-      path    => "${liferay_vagrant_dir}/portal-ext.properties",
-      content => template('liferay/portal-ext-cluster.properties.erb'),
-      owner   => $liferay_user,
-      group   => $liferay_group,
-      mode    => 2775,
-      require => Exec["${title}-unzip-liferay"]
-    }
-  } else {
-    file {"${title}-portal-ext.properties":
-      path    => "${liferay_vagrant_dir}/portal-ext.properties",
-      content => template('liferay/portal-ext.properties.erb'),
-      owner   => $liferay_user,
-      group   => $liferay_group,
-      mode    => 2775,
-      require => Exec["${title}-unzip-liferay"]
-    }
+
+  file {"${title}-portal-ext.properties":
+    path    => "${liferay_vagrant_dir}/portal-ext.properties",
+    content => template('liferay/portal-ext.properties.erb'),
+    owner   => $liferay_user,
+    group   => $liferay_group,
+    mode    => 2775,
+    require => Exec["${title}-unzip-liferay"]
   }
   
   #Create the portal-ext.properties file in vagrant folder
@@ -154,23 +154,6 @@ define liferay::single(
     mode    => 2775,
     content => "include-and-override=${liferay_vagrant_dir}/portal-ext.properties",
     require => Exec["${title}-unzip-liferay"],
-  }
-
-  # Wire APM agents
-  case $apm {
-    'dynatrace':  { 
-
-      #If using Dynatrace and single node instance, wire Dynatrace Agent and add JVM arguments for Tomcat
-      if (!$cluster_conf) {
-        $APM_AGENT_CONF = "-agentpath:${apm::dynatrace::dynatrace_agent_install_path}/agent/lib64/libdtagent.so=name=Tomcat,server=localhost:9998"
-      }
-
-    } 
-    
-    #Default scenario
-    default: { 
-      $APM_AGENT_CONF = ""
-    } #NOTHING TO DO
   }
 
   file {"${title}-setenv.sh":
@@ -192,22 +175,6 @@ define liferay::single(
     owner      => "root",
     group      => "root",
     mode       => 0755,
-  }
-
-  #If using SOLR, we just need to deploy the prepared war here
-  # which is expected to be in: /etc/puppet/modules/liferay/files/solr/XPTO.war
-  if ($solr_distribution) {
-
-    exec {"${title}-deploy-war-solr-liferay":
-      command => "cp solr/*.war ${liferay_deploy_dir}/",
-      cwd     => $module_files_location,
-      path    => ["/usr/bin", "/bin"],
-      require => [
-        Exec["war-solr-liferay"],
-        File["${title}-deploy"],
-      ]
-    }
-
   }
 
   if ($http_port == "8080") {

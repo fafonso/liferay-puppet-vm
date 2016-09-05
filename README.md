@@ -12,22 +12,14 @@ Disclaimer: This setup is not prepared/tuned for production environments and its
 * [VirtualBox](https://www.virtualbox.org/)
 * [Ubuntu trusty64 - Vagrant box](https://atlas.hashicorp.com/ubuntu/boxes/trusty64)
 
-#### Default usage (Liferay 6.2 CE GA6) ####
+#### Default usage (Liferay 7 CE GA3) ####
 
 1. Open file "/manifests/default.pp"
 2. Adjust the initial parameters for your case (top of the file)
 3. Go to the terminal and execute "vagrant up" on the project root directory
 
-#### Cluster configuration (Liferay 6.2 CE GA6 / 2 nodes) ####
-
-1. Open file "/manifests/default.pp"
-2. Uncomment cluster related configurations
-3. Adjust the initial parameters for your case (top of the file)
-4. Go to the terminal and execute "vagrant up" on the project root directory
-
 ```
-The second node must be manually started after the process is complete.
-Example: sudo service tomcat8081 start
+Master branch is using Liferay 7. If you need Liferay 6.2 version, please have a look on liferay-6.2.x branch.
 
 
 ```
@@ -45,9 +37,12 @@ Example: sudo service tomcat8081 start
 #### Hardware ####
 
 * OS: [Ubuntu](https://atlas.hashicorp.com/ubuntu/boxes/trusty64) - Official Ubuntu Server 14.04 LTS (Trusty Tahr) builds
-* CPU: 2
-* RAM: 4096 (can be set to 3072 for single instance usage)
+* By default Vagrant will try to compute the best resources configuration for you machine
+* If that is not possible (Windows machines), it will apply the following configuration:
+	* CPU: 4
+	* RAM: 4096 (can be set to 3072 for single instance usage) 
 * Changes can be done adjusting vb.memory and vb.cpus parameters in Vagrantfile
+
 
 #### Groups #####
 
@@ -64,7 +59,7 @@ Example: sudo service tomcat8081 start
 
 #### Java (OracleJDK or OpenJDK) #####
 
-* Version: Oracle 1.7 (default) or OpenJDK 7
+* Version: OracleJDK 8 (default) or OpenJDK 8
 * [Java Module](https://forge.puppetlabs.com/puppetlabs/java)
 * Remote jmx configured on ports 9090 and 9091 with credential controlRole:liferay
 
@@ -78,7 +73,7 @@ Example: sudo service tomcat8081 start
 
 #### Liferay #####
 
-* Default usage will download Liferay 6.2 CE GA6 - bundled with Tomcat (7.0.62)
+* Default usage will download Liferay 7 CE GA3 - bundled with Tomcat (8.0.32)
 * Configured to access lportal database
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy for deployments
 * <VAGRANT_SHARED_FOLDER>/liferay/portal-ext.properties available for configurations 
@@ -87,59 +82,31 @@ Example: sudo service tomcat8081 start
 * Development mode (optional) 
 	* Will import portal-developer.properties file
 
-#### Liferay (Cluster) #####
-
-* Default usage will download Liferay 6.2 CE GA6 - bundled with Tomcat (7.0.62)
-* Configured to access lportal database for both nodes
-* Configured to use <VAGRANT_SHARED_FOLDER>/liferay/nodeX/deploy for deployments
-* <VAGRANT_SHARED_FOLDER>/liferay/nodeX/portal-ext.properties available for configurations 
-* Configures tomcat and tomcat8081 as unix service
-* Set /opt/liferay/data/document_library as document library for both nodes, using Liferay AdvancedFileSystemStore
-* Http ports configured are 8080 for node1 and 8081 for node2
-* Uses the default Liferay cluster configuration (Multicast and RMI)
-
 #### HTTP Server (Optional) ####
 
 * By default, none is used
-* Apache2
+* Apache 2.4
 	* Configured with http proxy from port 80 to 8080
 	* Uses mod-jk
 	* Not configured to serve static content
-* Apache2 (Cluster)
-	* Configured with http proxy from port 80 to 8080/8081
-	* Sticky sessions
-	* Load balancing configured with "by request" approach
-	* Uses proxy, proxy_ajp, proxy_balancer, lbmethod_byrequest and slotmem_shm modules
-	* Not configured to serve static content
+	* Configured with compression (mod_deflate)
 * NginX
 	* Configured with http proxy from port 80 to 8080
 	* Using HTTP instead of AJP
 	* Not configured to serve static content
-* NginX (Cluster)
-	* Configured with http proxy from port 80 to 8080/8081
-	* Not configured to serve static content
-	* Using ip_hash (don't rely on AJP to attach the sticky session via jvmRoute)
-
-#### SOLR (Optional) #####
-
-* Supported versions: 3.5.0
-* Uses [Tomcat Module](https://forge.puppetlabs.com/puppetlabs/tomcat)
-* [Solr admin](http://localhost:18180/solr/admin)
 
 #### Email Server (Optional) #####
 
 * Configures Liferay to use [Mailcatcher](http://mailcatcher.me/) as dummy email server
 * [Web interface](http://localhost:11080) available to see all sent emails
 
-#### APM tool (Optional) #####
+```
+There is a known issue with Mailcatcher related to Ruby 1.9 and Mailcatcher dependencies. 
+As a workaround, it will give a Vagrant/puppet error during the VM creation but it will work. 
+Please ensure that mailcatcher service is up and running. If not, please start the service manually "sudo service mailcatcher start". 
 
-* By default, none is used
-* [DynaTrace](http://www.dynatrace.com/en/index.html)
-	* For the sake of simplicity and resource consumption, it is configured to run only with single node and Oracle JDK
-	* The current configuration is installing DynaTrace Server and Collector on the same VM, as so, VM resources need to be increased (tested with 6GB RAM and 4 CPUs)
-	* Requires ulimit to be increased to 2048 (uses [ulimit module](https://forge.puppetlabs.com/arioch/ulimit/readme))
-	* Used UNIX services: dynaTraceServer and dynaTraceCollector
-	* [DynaTrace Web client](https://localhost:19911/) (user and password = admin)
+
+```
 
 #### IPTables (VM Local ports) #####
 
@@ -149,25 +116,16 @@ Example: sudo service tomcat8081 start
 * 80, 443 http server
 * 8080, 8000 tomcat
 * 9090, 9091 jmx
-* 8081 tomcat2 (Cluster only)
-* 23301-23351 Multicast (Cluster only)
-* 8180 solr (Optional)
 * 1080 Mailcatcher web interface (Optional)
-* 8021, 2021, 9911 DynaTrace (Optional)
 
 #### VM Exposed Ports #####
 
 * host: 1080, guest: 80    (Http server)
-* host: 18080, guest: 8080 (Tomcat - Liferay node 1)
-* host: 18081, guest: 8081 (Tomcat - Liferay node 2)
-* host: 18000, guest: 8000 (Tomcat debug - Liferay node 1)
+* host: 18080, guest: 8080 (Tomcat - Liferay)
+* host: 18000, guest: 8000 (Tomcat debug - Liferay)
 * host: 19090, guest: 9090 (jmx)
 * host: 19091, guest: 9091 (jmx)
-* host: 18180, guest: 8180 (SOLR)
 * host: 11080, guest: 1080 (Mailcatcher)
-* host: 12021, guest: 2021 (Dynatrace client)
-* host: 18021, guest: 8021 (Dynatrace web client)
-* host: 19911, guest: 9911 (Dynatrace web client)
 
 ### Contribution guidelines ###
 

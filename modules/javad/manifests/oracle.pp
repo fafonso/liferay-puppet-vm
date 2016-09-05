@@ -16,7 +16,7 @@ class javad::oracle() {
 
   class { 'java':
     distribution => 'oracle-jdk',
-    package      => 'oracle-java7-installer',
+    package      => 'oracle-java8-installer',
     require      => [
       Apt::Ppa ['ppa:webupd8team/java'],
       Class['apt'],
@@ -27,7 +27,7 @@ class javad::oracle() {
 
   #Setup jmx access
   class {'jmx' :
-    jre_management_path => "/usr/lib/jvm/java-7-oracle/jre/lib/management",
+    jre_management_path => "/usr/lib/jvm/java-8-oracle/jre/lib/management",
     require             => Class['java'],
   }
 
