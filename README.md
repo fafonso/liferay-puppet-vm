@@ -108,6 +108,13 @@ Please ensure that mailcatcher service is up and running. If not, please start t
 
 ```
 
+#### External Services (Optional) #####
+
+* Will install and configure the following external services
+	* [ImageMagicK](http://www.imagemagick.org/script/index.php) - Improve PDF and Images previews;
+	* [OpenOffice / LibreOffice](https://www.libreoffice.org/download/libreoffice-fresh/) - Add previews and conversions for OpenDocument/MS Office files;
+	* [Xuggler](http://www.xuggle.com/xuggler/) - Add audio and video previews.
+
 #### IPTables (VM Local ports) #####
 
 * Optional - Disabled by default

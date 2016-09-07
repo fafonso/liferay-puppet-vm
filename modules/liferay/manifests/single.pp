@@ -20,6 +20,7 @@ define liferay::single(
   $liferay_db,
   $mail_server_port,
   $liferay_dev          = false,
+  $external_tools       = false,
   ) {
 
   $liferay_path       = "${install_path}/${liferay_folder}"
@@ -168,6 +169,28 @@ define liferay::single(
     require => Exec["${title}-unzip-liferay"]
   }
 
+  # Check if we want to install external services
+  if ($external_tools) {
+
+    # ImageMagicK
+    class {'externalservices::imagemagick': }
+
+    # OpenOffice
+    class {'externalservices::openoffice': 
+      liferay_user => $liferay_user,
+      require      => File["${title}-deploy"],
+    }
+
+    # Xuggler
+    # Xuggler as to be installed here as it is just a Liferay library
+    # Which requires Liferay WEB-INF folder to be available
+    class {'externalservices::xuggler': 
+      tomcat_home => $tomcat_path,
+      require     => Exec["${title}-unzip-liferay"],
+    }
+
+  }
+
   file { "${title}-tomcat":
     name       => "/etc/init.d/${service_name}",
     ensure     => present,
@@ -177,23 +200,18 @@ define liferay::single(
     mode       => 0755,
   }
 
-  if ($http_port == "8080") {
-    # Specific confifurations for first node
-
-    #We just want to start the first node 
-    service { "${service_name}":
-      name    => "${service_name}",
-      ensure  => "running",
-      enable  => true,
-      require => [
-          File["${title}-portal-ext.properties"],
-          File["${title}-setenv.sh"],
-          File["${title}-server.xml"],
-          File["${title}-tomcat"],
-        ],
-    }
+  service { "${service_name}":
+    name    => "${service_name}",
+    ensure  => "running",
+    enable  => true,
+    require => [
+        File["${title}-portal-ext.properties"],
+        File["${title}-setenv.sh"],
+        File["${title}-server.xml"],
+        File["${title}-tomcat"],
+      ],
+  }
     
-  } 
   
   
 }

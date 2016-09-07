@@ -18,6 +18,7 @@ class vmbuilder(
     $java_distribution    = "oracle",
     $mail_server          = "",
     $liferay_dev          = false,
+    $external_tools       = false,
   ) {
 
   $liferay_install_path = "${install_path}/liferay"
@@ -105,6 +106,7 @@ class vmbuilder(
     liferay_db           => $liferay_db,
     mail_server_port     => $mail_server_port,
     liferay_dev          => $liferay_dev,
+    external_tools       => $external_tools,
     require              => [
       Class['javad'], 
       Class['users'],
