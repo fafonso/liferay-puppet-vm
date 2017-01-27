@@ -1,8 +1,0 @@
-CATALINA_OPTS="$CATALINA_OPTS -Dfile.encoding=UTF8" 
-CATALINA_OPTS="$CATALINA_OPTS -Djava.net.preferIPv4Stack=true"  
-CATALINA_OPTS="$CATALINA_OPTS -Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false" 
-CATALINA_OPTS="$CATALINA_OPTS -Duser.timezone=GMT" 
-CATALINA_OPTS="$CATALINA_OPTS <%=@developer_properties_conf%>" 
-CATALINA_OPTS="$CATALINA_OPTS -Xmx<%=@xmx%>m" 
-CATALINA_OPTS="$CATALINA_OPTS -XX:MaxPermSize=<%=@permsize%>m" 
-CATALINA_OPTS="$CATALINA_OPTS -showversion" 
