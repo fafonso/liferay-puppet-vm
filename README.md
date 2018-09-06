@@ -12,14 +12,14 @@ Disclaimer: This setup is not prepared/tuned for production environments and its
 * [VirtualBox](https://www.virtualbox.org/)
 * [Ubuntu trusty64 - Vagrant box](https://atlas.hashicorp.com/ubuntu/boxes/trusty64)
 
-#### Default usage (Liferay 7 CE GA3) ####
+#### Default usage (Liferay 7.1 CE GA1) ####
 
 1. Open file "/manifests/default.pp"
 2. Adjust the initial parameters for your case (top of the file)
 3. Go to the terminal and execute "vagrant up" on the project root directory
 
 ```
-Master branch is using Liferay 7. If you need Liferay 6.2 version, please have a look on liferay-6.2.x branch.
+Master branch is using Liferay 7.1. If you need Liferay 6.2 or 7.0 versions, please have a look on liferay-6.2.x or liferay-7.0.x branches.
 
 
 ```
@@ -73,7 +73,7 @@ Master branch is using Liferay 7. If you need Liferay 6.2 version, please have a
 
 #### Liferay #####
 
-* Default usage will download Liferay 7 CE GA3 - bundled with Tomcat (8.0.32)
+* Default usage will download Liferay 7.1 CE GA1 - bundled with Tomcat (9.0.6)
 * Configured to access lportal database
 * Configured to use <VAGRANT_SHARED_FOLDER>/liferay/deploy for deployments
 * <VAGRANT_SHARED_FOLDER>/liferay/portal-ext.properties available for configurations 

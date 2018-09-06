@@ -27,13 +27,13 @@ class { 'vmbuilder' :
 
   ############### Install Liferay from local archive 
 
-  #liferay_zip_filename => "liferay-dxp-digital-enterprise-tomcat-7.0-ga1-20160617092557801.zip",
+  #liferay_zip_filename => "liferay-ce-portal-tomcat-7.1.0-ga1-20180703012531655.zip",
   
   #Liferay folder name inside zip archive
-  #liferay_folder       => "liferay-dxp-digital-enterprise-7.0-ga1",
+  #liferay_folder       => "liferay-ce-portal-7.1.0-ga1",
   
   #Tomcat folder (only if needed)
-  #tomcat_folder        => "tomcat-8.0.32",
+  #tomcat_folder        => "tomcat-9.0.6",
 
   ################ Development mode
   # Default to false
